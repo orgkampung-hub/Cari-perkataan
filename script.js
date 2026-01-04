@@ -4,7 +4,7 @@ let currentWords = [];
 let selectedCells = [];
 let lockedDir = null;
 let wordsFound = [];
-let score = 5; // Mata mula untuk bantuan awal
+let score = 5;
 let wordPositions = {};
 
 function pickCategory(cat) {
@@ -117,9 +117,6 @@ function select(el, r, c) {
         el.classList.remove('found');
         el.dataset.wasFound = "true";
     }
-    if (el.classList.contains('hinted')) {
-        el.dataset.wasHinted = "true";
-    }
     el.classList.add('selected');
     selectedCells.push({ el, r, c, char: el.innerText });
 }
@@ -139,28 +136,35 @@ function checkWord() {
     if (currentWords.includes(word) && !wordsFound.includes(word)) {
         wordsFound.push(word);
         score += 1;
-        selectedCells.forEach(s => {
-            s.el.classList.remove('selected');
-            s.el.classList.add('found');
-            delete s.el.dataset.wasFound;
-            delete s.el.dataset.wasHinted;
+        
+        // Animasi Cascading (Meletup satu-satu)
+        selectedCells.forEach((s, i) => {
+            setTimeout(() => {
+                s.el.classList.remove('selected');
+                s.el.classList.add('found');
+                delete s.el.dataset.wasFound;
+                if (navigator.vibrate) navigator.vibrate(15);
+            }, i * 60);
         });
+
         document.getElementById("list-" + word).className = 'strike';
         selectedCells = []; lockedDir = null;
         updateStats();
+
         if (wordsFound.length === currentWords.length) {
-            setTimeout(() => { alert("TAHNIAH! Skor Akhir: " + score); showMenu(); }, 300);
+            setTimeout(() => { 
+                createConfetti();
+                alert("SYABAS! Skor: " + score); 
+                showMenu(); 
+            }, 800);
         }
     }
 }
 
 function useHint() {
-    if (score <= 0) {
-        alert("Skor 0! Kumpulkan mata dulu."); return;
-    }
+    if (score <= 0) { alert("Skor 0!"); return; }
     const remaining = currentWords.filter(w => !wordsFound.includes(w));
     if (remaining.length > 0) {
-        // Cari huruf yang belum di-hint atau di-found
         let possibleHints = [];
         remaining.forEach(word => {
             wordPositions[word].forEach(pos => {
@@ -170,7 +174,6 @@ function useHint() {
                 }
             });
         });
-
         if (possibleHints.length > 0) {
             const randomCell = possibleHints[Math.floor(Math.random() * possibleHints.length)];
             randomCell.classList.add('hinted');
@@ -187,4 +190,19 @@ function updateStats() {
 function showMenu() {
     document.getElementById('game-screen').classList.add('hidden');
     document.getElementById('menu-screen').classList.remove('hidden');
+}
+
+// LOGIK CONFETTI
+function createConfetti() {
+    const colors = ['#f72585', '#4cc9f0', '#4caf50', '#ffca28', '#4361ee'];
+    for (let i = 0; i < 100; i++) {
+        const div = document.createElement('div');
+        div.className = 'confetti';
+        div.style.left = Math.random() * 100 + 'vw';
+        div.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        div.style.animationDuration = (Math.random() * 2 + 3) + 's';
+        div.style.opacity = Math.random();
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 5000);
+    }
 }
