@@ -3,45 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Word Search Pro - Mobile & Tablet</title>
+    <title>Cari Kata Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div id="menu-screen" class="screen">
-        <h1>WORD SEARCH</h1>
-        <p>Pilih Kategori:</p>
+        <h1>CARI KATA</h1>
         <div class="category-grid">
-            <button onclick="pickCategory('HAIWAN')">🐾 Haiwan</button>
-            <button onclick="pickCategory('BUAH')">🍎 Buah</button>
-            <button onclick="pickCategory('NEGARA')">🌍 Negara</button>
-            <button onclick="pickCategory('SUKAN')">⚽ Sukan</button>
-            <button onclick="pickCategory('BENDA')">📦 Benda</button>
+            <button onclick="pickCategory('HAIWAN')">🐾 HAIWAN</button>
+            <button onclick="pickCategory('BUAH')">🍎 BUAH</button>
+            <button onclick="pickCategory('NEGARA')">🌍 NEGARA</button>
+            <button onclick="pickCategory('SUKAN')">⚽ SUKAN</button>
+            <button onclick="pickCategory('BENDA')">📦 BENDA</button>
+        </div>
+
+        <div class="custom-section">
+            <p>Atau buat senarai sendiri:</p>
+            <textarea id="custom-words-input" placeholder="Taip perkataan, asingkan dengan koma..."></textarea>
+            <button class="btn-custom" onclick="startCustomGame()">MULA MOD CUSTOM</button>
         </div>
     </div>
 
     <div id="loading-screen" class="screen hidden">
-        <div class="spinner"></div>
-        <p>Menyusun huruf...</p>
+        <div class="loader"></div>
+        <p>Menyusun grid...</p>
     </div>
 
     <div id="game-screen" class="screen hidden">
         <div class="game-header">
             <div class="top-bar">
-                <button onclick="showMenu()" class="btn-small">← Menu</button>
-                <h2 id="current-cat-display">KATEGORI</h2>
-                <button onclick="useHint()" class="btn-hint">💡 HINT</button>
+                <button class="btn-small" onclick="showMenu()">🏠 MENU</button>
+                <button class="btn-hint" onclick="useHint()">💡 HINT (-1)</button>
             </div>
+            
             <div class="stats-bar">
-                <div id="score-display" class="score-box">SKOR: 0</div>
+                <span id="score-display">SKOR: 0</span>
             </div>
+
+            <div id="current-cat-display">KATEGORI</div>
         </div>
 
         <div id="grid-container"></div>
-
-        <div id="word-list-section">
-            <ul id="word-list"></ul>
-        </div>
+        <ul id="word-list"></ul>
     </div>
 
     <script src="words.js"></script>

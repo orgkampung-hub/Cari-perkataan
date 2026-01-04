@@ -11,15 +11,26 @@ function pickCategory(cat) {
     document.getElementById('menu-screen').classList.add('hidden');
     document.getElementById('loading-screen').classList.remove('hidden');
     setTimeout(() => {
-        setupGame(cat);
-        document.getElementById('loading-screen').classList.add('hidden');
-        document.getElementById('game-screen').classList.remove('hidden');
-    }, 1000);
+        let words = [...wordBank[cat]].sort(() => 0.5 - Math.random()).slice(0, 12);
+        setupGame(cat, words);
+    }, 600);
 }
 
-function setupGame(cat) {
-    document.getElementById('current-cat-display').innerText = cat;
-    currentWords = [...wordBank[cat]].sort(() => 0.5 - Math.random()).slice(0, 12);
+function startCustomGame() {
+    const input = document.getElementById('custom-words-input').value;
+    let words = input.split(/[,]+/).map(w => w.trim().toUpperCase()).filter(w => w.length > 0);
+    if (words.length < 2) { alert("Masukkan sekurang-kurangnya 2 perkataan!"); return; }
+    const tooLong = words.find(w => w.length > gridSize);
+    if (tooLong) { alert(`Perkataan "${tooLong}" terlalu panjang!`); return; }
+
+    document.getElementById('menu-screen').classList.add('hidden');
+    document.getElementById('loading-screen').classList.remove('hidden');
+    setTimeout(() => { setupGame("MOD CUSTOM", words.slice(0, 15)); }, 600);
+}
+
+function setupGame(title, words) {
+    document.getElementById('current-cat-display').innerText = title;
+    currentWords = words;
     wordsFound = [];
     selectedCells = [];
     lockedDir = null;
@@ -29,6 +40,8 @@ function setupGame(cat) {
     fillEmpty();
     renderUI();
     updateStats();
+    document.getElementById('loading-screen').classList.add('hidden');
+    document.getElementById('game-screen').classList.remove('hidden');
 }
 
 function placeWords() {
@@ -36,10 +49,9 @@ function placeWords() {
     currentWords.forEach(word => {
         let placed = false;
         let attempts = 0;
-        while (!placed && attempts < 200) {
+        while (!placed && attempts < 150) {
             let d = directions[Math.floor(Math.random() * directions.length)];
-            let r = Math.floor(Math.random() * gridSize);
-            let c = Math.floor(Math.random() * gridSize);
+            let r = Math.floor(Math.random() * gridSize), c = Math.floor(Math.random() * gridSize);
             if (canPlace(word, r, c, d)) {
                 let coords = [];
                 for(let i=0; i<word.length; i++) {
@@ -77,9 +89,7 @@ function renderUI() {
     grid.forEach((row, r) => {
         row.forEach((char, c) => {
             const el = document.createElement('div');
-            el.className = 'cell';
-            el.innerText = char;
-            el.id = `cell-${r}-${c}`;
+            el.className = 'cell'; el.innerText = char; el.id = `cell-${r}-${c}`;
             el.onclick = () => handleTap(el, r, c);
             container.appendChild(el);
         });
@@ -87,36 +97,27 @@ function renderUI() {
     const list = document.getElementById('word-list');
     list.innerHTML = '';
     currentWords.forEach(w => {
-        const li = document.createElement('li');
-        li.innerText = w; li.id = "list-" + w;
+        const li = document.createElement('li'); li.innerText = w; li.id = "list-" + w;
         list.appendChild(li);
     });
 }
 
 function handleTap(el, r, c) {
-    if (navigator.vibrate) navigator.vibrate(25);
-    if (selectedCells.length === 0) {
-        select(el, r, c);
-    } else {
+    if (navigator.vibrate) navigator.vibrate(20);
+    if (selectedCells.length === 0) { select(el, r, c); } 
+    else {
         const last = selectedCells[selectedCells.length - 1];
         if (el === last.el) { deselect(); return; }
         let dr = r - last.r, dc = c - last.c;
         if (Math.abs(dr) > 1 || Math.abs(dc) > 1) return;
-        if (selectedCells.length === 1) {
-            lockedDir = { dr, dc };
-            select(el, r, c);
-        } else if (dr === lockedDir.dr && dc === lockedDir.dc) {
-            select(el, r, c);
-        }
+        if (selectedCells.length === 1) { lockedDir = { dr, dc }; select(el, r, c); }
+        else if (dr === lockedDir.dr && dc === lockedDir.dc) { select(el, r, c); }
     }
     checkWord();
 }
 
 function select(el, r, c) {
-    if (el.classList.contains('found')) {
-        el.classList.remove('found');
-        el.dataset.wasFound = "true";
-    }
+    if (el.classList.contains('found')) { el.classList.remove('found'); el.dataset.wasFound = "true"; }
     el.classList.add('selected');
     selectedCells.push({ el, r, c, char: el.innerText });
 }
@@ -124,10 +125,7 @@ function select(el, r, c) {
 function deselect() {
     const last = selectedCells.pop();
     last.el.classList.remove('selected');
-    if (last.el.dataset.wasFound === "true") {
-        last.el.classList.add('found');
-        delete last.el.dataset.wasFound;
-    }
+    if (last.el.dataset.wasFound === "true") { last.el.classList.add('found'); delete last.el.dataset.wasFound; }
     if (selectedCells.length < 2) lockedDir = null;
 }
 
@@ -136,27 +134,17 @@ function checkWord() {
     if (currentWords.includes(word) && !wordsFound.includes(word)) {
         wordsFound.push(word);
         score += 1;
-        
-        // Animasi Cascading (Meletup satu-satu)
         selectedCells.forEach((s, i) => {
             setTimeout(() => {
-                s.el.classList.remove('selected');
-                s.el.classList.add('found');
+                s.el.classList.remove('selected'); s.el.classList.add('found');
                 delete s.el.dataset.wasFound;
                 if (navigator.vibrate) navigator.vibrate(15);
             }, i * 60);
         });
-
         document.getElementById("list-" + word).className = 'strike';
-        selectedCells = []; lockedDir = null;
-        updateStats();
-
+        selectedCells = []; lockedDir = null; updateStats();
         if (wordsFound.length === currentWords.length) {
-            setTimeout(() => { 
-                createConfetti();
-                alert("SYABAS! Skor: " + score); 
-                showMenu(); 
-            }, 800);
+            setTimeout(() => { createConfetti(); alert("TAHNIAH! Skor Akhir: " + score); showMenu(); }, 800);
         }
     }
 }
@@ -165,44 +153,36 @@ function useHint() {
     if (score <= 0) { alert("Skor 0!"); return; }
     const remaining = currentWords.filter(w => !wordsFound.includes(w));
     if (remaining.length > 0) {
-        let possibleHints = [];
-        remaining.forEach(word => {
-            wordPositions[word].forEach(pos => {
-                const el = document.getElementById(`cell-${pos.r}-${pos.c}`);
-                if (!el.classList.contains('found') && !el.classList.contains('hinted')) {
-                    possibleHints.push(el);
-                }
+        let possible = [];
+        remaining.forEach(w => {
+            wordPositions[w].forEach(p => {
+                let el = document.getElementById(`cell-${p.r}-${p.c}`);
+                if (!el.classList.contains('found') && !el.classList.contains('hinted')) possible.push(el);
             });
         });
-        if (possibleHints.length > 0) {
-            const randomCell = possibleHints[Math.floor(Math.random() * possibleHints.length)];
-            randomCell.classList.add('hinted');
-            score -= 1;
-            updateStats();
+        if (possible.length > 0) {
+            possible[Math.floor(Math.random() * possible.length)].classList.add('hinted');
+            score -= 1; updateStats();
         }
     }
 }
 
-function updateStats() {
-    document.getElementById('score-display').innerText = "SKOR: " + score;
-}
+function updateStats() { document.getElementById('score-display').innerText = "SKOR: " + score; }
 
 function showMenu() {
     document.getElementById('game-screen').classList.add('hidden');
     document.getElementById('menu-screen').classList.remove('hidden');
 }
 
-// LOGIK CONFETTI
 function createConfetti() {
-    const colors = ['#f72585', '#4cc9f0', '#4caf50', '#ffca28', '#4361ee'];
-    for (let i = 0; i < 100; i++) {
+    const colors = ['#f72585', '#4cc9f0', '#4caf50', '#ffca28'];
+    for (let i = 0; i < 80; i++) {
         const div = document.createElement('div');
         div.className = 'confetti';
         div.style.left = Math.random() * 100 + 'vw';
         div.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        div.style.animationDuration = (Math.random() * 2 + 3) + 's';
-        div.style.opacity = Math.random();
+        div.style.animationDuration = (Math.random() * 2 + 2) + 's';
         document.body.appendChild(div);
-        setTimeout(() => div.remove(), 5000);
+        setTimeout(() => div.remove(), 4000);
     }
 }
