@@ -4,7 +4,7 @@ let currentWords = [];
 let selectedCells = [];
 let lockedDir = null;
 let wordsFound = [];
-let score = 5; // Kita beri 5 mata permulaan supaya boleh guna hint awal
+let score = 5; // Mata mula untuk bantuan awal
 let wordPositions = {};
 
 function pickCategory(cat) {
@@ -14,12 +14,12 @@ function pickCategory(cat) {
         setupGame(cat);
         document.getElementById('loading-screen').classList.add('hidden');
         document.getElementById('game-screen').classList.remove('hidden');
-    }, 1200);
+    }, 1000);
 }
 
 function setupGame(cat) {
-    document.getElementById('current-cat-display').innerText = "KATEGORI: " + cat;
-    currentWords = [...wordBank[cat]].sort(() => 0.5 - Math.random()).slice(0, 10);
+    document.getElementById('current-cat-display').innerText = cat;
+    currentWords = [...wordBank[cat]].sort(() => 0.5 - Math.random()).slice(0, 12);
     wordsFound = [];
     selectedCells = [];
     lockedDir = null;
@@ -113,10 +113,12 @@ function handleTap(el, r, c) {
 }
 
 function select(el, r, c) {
-    // Jika asalnya hijau (found), simpan status dan tukar ke biru
     if (el.classList.contains('found')) {
         el.classList.remove('found');
         el.dataset.wasFound = "true";
+    }
+    if (el.classList.contains('hinted')) {
+        el.dataset.wasHinted = "true";
     }
     el.classList.add('selected');
     selectedCells.push({ el, r, c, char: el.innerText });
@@ -125,7 +127,6 @@ function select(el, r, c) {
 function deselect() {
     const last = selectedCells.pop();
     last.el.classList.remove('selected');
-    // Jika asalnya hijau, kembalikan warna hijau
     if (last.el.dataset.wasFound === "true") {
         last.el.classList.add('found');
         delete last.el.dataset.wasFound;
@@ -141,34 +142,41 @@ function checkWord() {
         selectedCells.forEach(s => {
             s.el.classList.remove('selected');
             s.el.classList.add('found');
-            delete s.el.dataset.wasFound; // Selesai, buang tanda sementara
+            delete s.el.dataset.wasFound;
+            delete s.el.dataset.wasHinted;
         });
         document.getElementById("list-" + word).className = 'strike';
         selectedCells = []; lockedDir = null;
         updateStats();
         if (wordsFound.length === currentWords.length) {
-            setTimeout(() => { alert("TAHNIAH! Skor: " + score); showMenu(); }, 300);
+            setTimeout(() => { alert("TAHNIAH! Skor Akhir: " + score); showMenu(); }, 300);
         }
     }
 }
 
-// FUNGSI HINT: HIGHLIGHT 1 HURUF RANDOM DARIPADA PERKATAAN RANDOM
 function useHint() {
     if (score <= 0) {
-        alert("Skor 0! Kumpulkan skor dulu."); return;
+        alert("Skor 0! Kumpulkan mata dulu."); return;
     }
     const remaining = currentWords.filter(w => !wordsFound.includes(w));
     if (remaining.length > 0) {
-        // Pilih perkataan random, pilih huruf random
-        const randomWord = remaining[Math.floor(Math.random() * remaining.length)];
-        const coords = wordPositions[randomWord];
-        const randomCoord = coords[Math.floor(Math.random() * coords.length)];
-        const cell = document.getElementById(`cell-${randomCoord.r}-${randomCoord.c}`);
-        
-        cell.classList.add('hinted');
-        score -= 1;
-        updateStats();
-        setTimeout(() => cell.classList.remove('hinted'), 3000);
+        // Cari huruf yang belum di-hint atau di-found
+        let possibleHints = [];
+        remaining.forEach(word => {
+            wordPositions[word].forEach(pos => {
+                const el = document.getElementById(`cell-${pos.r}-${pos.c}`);
+                if (!el.classList.contains('found') && !el.classList.contains('hinted')) {
+                    possibleHints.push(el);
+                }
+            });
+        });
+
+        if (possibleHints.length > 0) {
+            const randomCell = possibleHints[Math.floor(Math.random() * possibleHints.length)];
+            randomCell.classList.add('hinted');
+            score -= 1;
+            updateStats();
+        }
     }
 }
 
