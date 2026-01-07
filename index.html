@@ -11,21 +11,25 @@
     <div id="menu-screen" class="screen">
         <h1>CARI KATA</h1>
         <div class="category-grid">
-            <button onclick="pickCategory('HAIWAN')">🐾 HAIWAN</button>
-            <button onclick="pickCategory('BUAH')">🍎 BUAH</button>
-            <button onclick="pickCategory('NEGARA')">🌍 NEGARA</button>
-            <button onclick="pickCategory('SUKAN')">⚽ SUKAN</button>
-            <button onclick="pickCategory('BENDA')">📦 BENDA</button>
+            <!-- Button guna versi cross -->
+            <button onclick="pickCategoryCross('HAIWAN')">🐾 HAIWAN</button>
+            <button onclick="pickCategoryCross('BUAH')">🍎 BUAH</button>
+            <button onclick="pickCategoryCross('NEGARA')">🌍 NEGARA</button>
+            <button onclick="pickCategoryCross('SUKAN')">⚽ SUKAN</button>
+            <button onclick="pickCategoryCross('BENDA')">📦 BENDA</button>
         </div>
         
         <p style="font-size: 0.85rem; color: #666; margin-top: 10px; text-align: center;">
-            <i>Cara bermain: Klik setiap huruf dari huruf pertama hingga akhir untuk pilih perkataan.</i>
+            Nak pilih perkataan? Tap huruf mula dan huruf akhir je!
+        </p>
+        <p style="font-size: 0.7rem; color: #999; margin-top: 2px; text-align: center;">
+            akulas * v1.2.1
         </p>
 
         <div class="custom-section">
             <p>Atau buat senarai sendiri:</p>
             <textarea id="custom-words-input" placeholder="Taip perkataan, asingkan dengan koma..."></textarea>
-            <button class="btn-custom" onclick="startCustomGame()">MULA MOD CUSTOM</button>
+            <button class="btn-custom" onclick="startCustomGameCross()">MULA MOD CUSTOM</button>
         </div>
     </div>
 
@@ -52,7 +56,9 @@
         <ul id="word-list"></ul>
     </div>
 
+    <!-- Wordbank & scripts -->
     <script src="words.js"></script>
     <script src="script.js"></script>
+    <script src="wordbank-cross.js"></script>
 </body>
 </html>
