@@ -14,30 +14,34 @@
         <p>Menyusun grid...</p>
     </div>
 
-    <div id="game-screen" class="screen hidden" style="position: relative;">
-        <div class="game-header">
-            <div class="top-bar">
-                <button class="btn-small" onclick="window.location.href='index.html'">🏠</button>
-                <div id="toast-msg">Mata tidak cukup! (Perlu 4 mata)</div>
+    <div id="game-screen" class="screen hidden">
+        
+        <div class="side-panel">
+            <div class="game-header">
+                <div class="top-bar">
+                    <button class="btn-small" onclick="window.location.href='index.html'">🏠</button>
+                    
+                    <div id="toast-msg">Mata tidak cukup! (Perlu 4 mata)</div>
 
-                
-                <div class="stats-bar">
-                    <span id="score-display">0</span>
-                    <div id="current-cat-display">KATEGORI</div>
+                    <div class="stats-bar">
+                        <span id="score-display">0</span>
+                        <div id="current-cat-display">KATEGORI</div>
+                    </div>
+
+                    <button class="btn-hint" onclick="useHint()">💡</button>
                 </div>
-
-                <button class="btn-hint" onclick="useHint()">💡</button>
             </div>
+
+            <ul id="word-list"></ul>
         </div>
+
+        <div id="grid-container"></div>
 
         <div id="debugPanel">
             <div id="dbgWords"></div>
             <div id="dbgCross"></div>
             <div id="dbgRetry"></div>
         </div>
-
-        <ul id="word-list"></ul>
-        <div id="grid-container"></div>
     </div>
 
     <div id="custom-modal">

@@ -1,4 +1,18 @@
 /* =============================================================
+   ROOT & SCREEN ALIGNMENT (Fix Header Jatuh Ke Bawah)
+   ============================================================= */
+#game-screen {
+    justify-content: flex-start !important; /* Paksa kandungan bermula dari atas */
+    padding-top: env(safe-area-inset-top, 15px);
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+/* =============================================================
    GAME HEADER & TOP UI
    ============================================================= */
 .game-header { 
@@ -114,7 +128,7 @@
 }
 
 /* =============================================================
-   GRID & CELLS (DIOPTIMUMKAN UNTUK SAIZ BESAR & CENTER)
+   GRID & CELLS
    ============================================================= */
 #grid-container { 
     display: grid; 
@@ -253,6 +267,88 @@
 }
 
 /* =============================================================
+   TOAST NOTIFICATION (AMARAN)
+   ============================================================= */
+#toast-msg {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: rgba(216, 27, 96, 0.95); 
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 3000;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+#toast-msg.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* =============================================================
+   LANDSCAPE OPTIMIZATION (v2.1.0 - Wider Side Panel)
+   ============================================================= */
+@media screen and (orientation: landscape) {
+    #game-screen {
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center;
+        padding: 10px 30px;
+        gap: 30px; /* Jarak antara panel kiri dan grid */
+    }
+
+    /* Side Panel (Kiri) - Dilebarkan ke 45% */
+    .side-panel {
+        display: flex;
+        flex-direction: column;
+        width: 45%; 
+        max-width: 450px; 
+        gap: 15px;
+        height: 90vh;
+        justify-content: center;
+    }
+
+    .game-header {
+        margin-bottom: 0;
+        width: 100%;
+    }
+
+    #word-list {
+        margin: 0;
+        max-height: 60vh; /* Tinggi sedikit lagi supaya muat banyak kata */
+        overflow-y: auto; 
+        justify-content: center;
+        background: rgba(255,255,255,0.8);
+        padding: 15px;
+        border-width: 2px;
+    }
+
+    /* Grid Container (Kanan) - Maintain Square */
+    #grid-container {
+        width: 85vh; 
+        height: 85vh;
+        max-width: 500px;
+        max-height: 500px;
+        margin: 0;
+        flex-shrink: 0; /* Paksa grid jangan mengecil */
+    }
+
+    .cell {
+        font-size: clamp(0.6rem, 3.2vh, 1.1rem); 
+    }
+
+    #toast-msg {
+        top: 10px;
+    }
+}
+
+/* =============================================================
    🔧 DEBUG PANEL & OTHERS
    ============================================================= */
 .confetti { position: absolute; width: 8px; height: 8px; z-index: 999; pointer-events: none; animation: fall linear forwards; }
@@ -277,30 +373,3 @@
 }
 
 body:not(.debug-on) #debugPanel { display: none; }
-#debugPanel div { padding: 2px 4px; background: rgba(0,0,0,0.4); border-radius: 3px; }
-.cross-debug { background: rgba(255, 0, 0, 0.35) !important; border: 2px solid red !important; }
-.placed-debug { border: 2px solid #f39c12 !important; }
-/* =============================================================
-   TOAST NOTIFICATION (AMARAN)
-   ============================================================= */
-#toast-msg {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-100px);
-    background: rgba(216, 27, 96, 0.95); /* Warna merah pinkish */
-    color: white;
-    padding: 12px 25px;
-    border-radius: 50px;
-    font-weight: 800;
-    font-size: 0.9rem;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    z-index: 3000;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: none;
-    white-space: nowrap;
-}
-
-#toast-msg.show {
-    transform: translateX(-50%) translateY(0);
-}

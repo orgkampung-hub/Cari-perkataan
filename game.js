@@ -232,3 +232,13 @@ function closeModal() {
 function updateStats() {
     document.getElementById('score-display').innerText = score;
 }
+// ---------------- AUTO-RESIZE PADA ROTATION ----------------
+// Fungsi ini akan refresh UI bila user pusing skrin (Portrait <-> Landscape)
+window.addEventListener('orientationchange', () => {
+    // Beri masa sikit untuk browser update saiz skrin baru
+    setTimeout(() => {
+        if (grid.length > 0) {
+            renderUI(); 
+        }
+    }, 200);
+});
