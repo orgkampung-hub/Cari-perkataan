@@ -1,6 +1,9 @@
-// ====================== game.js (v2.0.1 Update) ======================
+/**
+ * game.js - Versi Stabil & Kualiti Tinggi
+ * Ciri: Anti-Stuck, CRS Optimization, Full Directions
+ */
 
-let gridSize = 14;
+let gridSize = 14; 
 let grid = [];
 let currentWords = [];
 let wordsFound = [];
@@ -9,9 +12,10 @@ let score = 0;
 let currentGridNum = 1;
 let firstCell = null;
 let currentCategory = "";
-
 let hintCountUsed = 0;      
 let wordsHinted = [];       
+
+let debugData = { attempts: 0, crossCount: 0 };
 
 window.onload = () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -31,61 +35,90 @@ function startNewRound(cat) {
     wordsHinted = [];       
     wordPositions = {};
     firstCell = null;
-    grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(''));
 
-    const selectedWords = pickWords(cat);
-    
+    // Sasar CRS Min 3 dengan cara selamat (1 kali jalan)
     setTimeout(() => {
-        const successfullyPlaced = placeWords(selectedWords);
-        currentWords = successfullyPlaced;
-        fillEmpty();  
+        generateHighQualityGrid(cat);
         renderUI();
         updateStats();
+
+        if (window.updateDebugInfo) {
+            window.updateDebugInfo({
+                words: currentWords,
+                crossCount: debugData.crossCount,
+                retry: debugData.attempts
+            });
+        }
+
         if(loading) loading.classList.add('hidden');
         if(gameScreen) gameScreen.classList.remove('hidden');
         document.getElementById('current-cat-display').innerText = `GRID #${currentGridNum} - ${cat.toUpperCase()}`;
     }, 300);
 }
 
+function generateHighQualityGrid(cat) {
+    debugData.attempts = 0;
+    debugData.crossCount = 0;
+    grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(''));
+    
+    const selectedWords = pickWords(cat);
+    currentWords = placeWords(selectedWords);
+    fillEmpty();
+}
+
 function pickWords(cat) {
     const allWords = wordBank[cat] || [];
     const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
-    const short = allWords.filter(w => w.length <= 5);
-    const medium = allWords.filter(w => w.length >= 6 && w.length <= 8);
-    const long = allWords.filter(w => w.length >= 9);
-    let picked = [...shuffle(short).slice(0, 6), ...shuffle(medium).slice(0, 4), ...shuffle(long).slice(0, 2)].map(w => w.toUpperCase());
-    return shuffle(picked);
+    const s = shuffle(allWords.filter(w => w.length <= 5)).slice(0, 5);
+    const m = shuffle(allWords.filter(w => w.length >= 6 && w.length <= 8)).slice(0, 5);
+    const l = shuffle(allWords.filter(w => w.length >= 9)).slice(0, 2);
+    return [...s, ...m, ...l].map(w => w.toUpperCase()).sort((a,b) => b.length - a.length);
 }
 
 function placeWords(wordsToPlace) {
     const allDirs = [[0, 1], [1, 0], [1, 1], [-1, 1], [0, -1], [-1, 0], [-1, -1], [1, -1]];
     let placedList = [];
-    const sortedWords = [...wordsToPlace].sort((a, b) => b.length - a.length);
-    for (let word of sortedWords) {
-        let placed = false;
-        let attempts = 0;
-        while (!placed && attempts < 500) {
-            let d = allDirs[Math.floor(Math.random() * allDirs.length)];
-            let r = Math.floor(Math.random() * gridSize);
-            let c = Math.floor(Math.random() * gridSize);
-            if (canPlace(word, r, c, d)) {
-                fillWord(word, r, c, d);
-                placedList.push(word);
-                placed = true;
+
+    for (let word of wordsToPlace) {
+        let bestPos = [];
+        let maxOverlap = -1;
+
+        // Scan grid untuk cari spot terbaik
+        for (let r = 0; r < gridSize; r++) {
+            for (let c = 0; c < gridSize; c++) {
+                for (let d of allDirs) {
+                    debugData.attempts++;
+                    let overlap = checkPotentialOverlap(word, r, c, d);
+                    if (overlap > maxOverlap) {
+                        maxOverlap = overlap;
+                        bestPos = [{r, c, d, overlap}];
+                    } else if (overlap === maxOverlap && overlap !== -1) {
+                        bestPos.push({r, c, d, overlap});
+                    }
+                }
             }
-            attempts++;
+        }
+
+        if (bestPos.length > 0) {
+            // Pilih satu dari posisi terbaik secara rawak
+            const pick = bestPos[Math.floor(Math.random() * bestPos.length)];
+            fillWord(word, pick.r, pick.c, pick.d);
+            debugData.crossCount += pick.overlap;
+            placedList.push(word);
         }
     }
     return placedList;
 }
 
-function canPlace(word, r, c, d) {
+function checkPotentialOverlap(word, r, c, d) {
+    let overlap = 0;
     for (let i = 0; i < word.length; i++) {
         let nr = r + i * d[0], nc = c + i * d[1];
-        if (nr < 0 || nr >= gridSize || nc < 0 || nc >= gridSize) return false;
-        if (grid[nr][nc] !== '' && grid[nr][nc] !== word[i]) return false;
+        if (nr < 0 || nr >= gridSize || nc < 0 || nc >= gridSize) return -1;
+        if (grid[nr][nc] !== '' && grid[nr][nc] !== word[i]) return -1;
+        if (grid[nr][nc] === word[i]) overlap++;
     }
-    return true;
+    return overlap;
 }
 
 function fillWord(word, r, c, d) {
@@ -107,28 +140,44 @@ function fillEmpty() {
     }
 }
 
+// ====================== UI & LOGIC GAMEPLAY ======================
+
 function renderUI() {
     const container = document.getElementById('grid-container');
+    if(!container) return;
     container.innerHTML = '';
     container.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+    
     grid.forEach((row, r) => {
         row.forEach((char, c) => {
             const el = document.createElement('div');
             el.className = 'cell';
             el.innerText = char;
             el.id = `cell-${r}-${c}`;
-            el.onmousedown = () => handleTap(el, r, c); 
+            
+            for (let w in wordPositions) {
+                if (wordPositions[w].some(p => p.r === r && p.c === c)) {
+                    el.setAttribute('data-word', 'true');
+                    break;
+                }
+            }
+
+            el.onmousedown = () => handleTap(el, r, c);
+            el.ontouchstart = (e) => { e.preventDefault(); handleTap(el, r, c); }; 
             container.appendChild(el);
         });
     });
+
     const list = document.getElementById('word-list');
-    list.innerHTML = '';
-    currentWords.forEach(w => {
-        const li = document.createElement('li');
-        li.id = "list-" + w;
-        li.innerText = w;
-        list.appendChild(li);
-    });
+    if(list) {
+        list.innerHTML = '';
+        currentWords.forEach(w => {
+            const li = document.createElement('li');
+            li.id = "list-" + w;
+            li.innerText = w;
+            list.appendChild(li);
+        });
+    }
 }
 
 function handleTap(el, r, c) {
@@ -144,11 +193,12 @@ function handleTap(el, r, c) {
         else if (dc === 0) stepR = dr > 0 ? 1 : -1;
         else if (Math.abs(dr) === Math.abs(dc)) { stepR = dr > 0 ? 1 : -1; stepC = dc > 0 ? 1 : -1; }
         else { if (typeof SoundFX !== 'undefined') SoundFX.wrong(); resetSelection(); return; }
+        
         let path = [];
         for (let i = 0; i <= dist; i++) {
             let curR = firstCell.r + (i * stepR), curC = firstCell.c + (i * stepC);
             const cell = document.getElementById(`cell-${curR}-${curC}`);
-            path.push({ el: cell, char: cell.innerText });
+            if(cell) path.push({ el: cell, char: cell.innerText });
         }
         checkWord(path);
         resetSelection();
@@ -166,7 +216,8 @@ function checkWord(path) {
         wordsFound.push(targetWord);
         if (typeof SoundFX !== 'undefined') SoundFX.success();
         path.forEach((p, i) => setTimeout(() => p.el.classList.add('found'), i * 30));
-        document.getElementById("list-" + targetWord).className = 'strike';
+        const li = document.getElementById("list-" + targetWord);
+        if(li) li.className = 'strike';
         score += 1; 
         updateStats();
         if (wordsFound.length === currentWords.length) {
@@ -180,28 +231,17 @@ function checkWord(path) {
     }
 }
 
-// ---------------- FUNGSI HINT & TOAST ----------------
 function useHint() {
     const potentialWords = currentWords.filter(w => !wordsFound.includes(w) && !wordsHinted.includes(w));
-    if (potentialWords.length === 0) {
-        if (typeof SoundFX !== 'undefined') SoundFX.wrong();
-        return;
-    }
-
+    if (potentialWords.length === 0) return;
     const hintCost = (hintCountUsed === 0) ? 0 : 4;
-
-    if (score < hintCost) {
-        if (typeof SoundFX !== 'undefined') SoundFX.wrong();
-        showToast(); // Panggil toast, bukan alert!
-        return;
-    }
-
+    if (score < hintCost) { showToast(); return; }
+    
     const selectedWord = potentialWords[Math.floor(Math.random() * potentialWords.length)];
     const positions = wordPositions[selectedWord];
     const randomPos = positions[Math.floor(Math.random() * positions.length)];
     const el = document.getElementById(`cell-${randomPos.r}-${randomPos.c}`);
 
-    if (typeof SoundFX !== 'undefined') SoundFX.tap();
     el.classList.add('hinted');
     wordsHinted.push(selectedWord);
     hintCountUsed++;
@@ -211,10 +251,10 @@ function useHint() {
 
 function showToast() {
     const toast = document.getElementById('toast-msg');
-    toast.classList.add('show');
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 2500); // Hilang selepas 2.5 saat
+    if(toast) {
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 2500);
+    }
 }
 
 function showWinModal() {
@@ -230,15 +270,10 @@ function closeModal() {
 }
 
 function updateStats() {
-    document.getElementById('score-display').innerText = score;
+    const sd = document.getElementById('score-display');
+    if(sd) sd.innerText = score;
 }
-// ---------------- AUTO-RESIZE PADA ROTATION ----------------
-// Fungsi ini akan refresh UI bila user pusing skrin (Portrait <-> Landscape)
+
 window.addEventListener('orientationchange', () => {
-    // Beri masa sikit untuk browser update saiz skrin baru
-    setTimeout(() => {
-        if (grid.length > 0) {
-            renderUI(); 
-        }
-    }, 200);
+    setTimeout(() => { if (grid.length > 0) renderUI(); }, 200);
 });

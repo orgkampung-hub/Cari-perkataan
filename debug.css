@@ -1,0 +1,65 @@
+/* =============================================================
+   DEBUG TOOL - POSITION FIX (v2.3.1)
+   Anjak ke bawah sikit supaya tak tutup butang skor
+   ============================================================= */
+
+body:not(.debug-on) #debugPanel { 
+    display: none !important; 
+}
+
+#debugPanel {
+    /* POSISI: Fixed di tengah, tapi anjak ke bawah sikit (60px) */
+    position: fixed !important;
+    top: 60px !important; /* Jarakkan dari skor supaya jari boleh tekan skor */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    
+    /* SAIZ: Kunci saiz */
+    width: 90px !important;
+    height: auto !important;
+    
+    /* VISUAL: Lutsinar supaya nampak grid di belakang */
+    background: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(3px);
+    color: #00ff90 !important;
+    padding: 8px !important;
+    border: 1px solid rgba(0, 255, 144, 0.5) !important;
+    border-radius: 8px !important;
+    
+    /* LAYER & TEKS */
+    z-index: 10000000 !important;
+    pointer-events: auto !important;
+    box-sizing: border-box !important;
+    font-family: monospace !important;
+    font-size: 10px !important;
+    text-align: center !important;
+}
+
+#debugPanel div {
+    margin-bottom: 2px !important;
+    white-space: nowrap !important;
+}
+
+/* Butang Skip */
+.btn-skip {
+    margin-top: 6px !important;
+    width: 100% !important;
+    background: rgba(255, 71, 87, 0.9) !important;
+    color: white !important;
+    border: none !important;
+    padding: 5px 0 !important;
+    font-size: 9px !important;
+    font-weight: bold !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+}
+
+.btn-skip:active {
+    background: #ff4757 !important;
+}
+
+/* Highlight Jawapan */
+body.debug-on .cell[data-word="true"] {
+    background-color: rgba(0, 255, 144, 0.15) !important;
+    outline: 1px solid rgba(0, 255, 144, 0.6) !important;
+}
