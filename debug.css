@@ -1,6 +1,6 @@
 /* =============================================================
-   DEBUG TOOL - POSITION FIX (v2.3.1)
-   Anjak ke bawah sikit supaya tak tutup butang skor
+   DEBUG TOOL - CUSTOMIZABLE VERSION
+   Klik kotak warna di sebelah kod HEX dalam Acode untuk ubah.
    ============================================================= */
 
 body:not(.debug-on) #debugPanel { 
@@ -8,58 +8,56 @@ body:not(.debug-on) #debugPanel {
 }
 
 #debugPanel {
-    /* POSISI: Fixed di tengah, tapi anjak ke bawah sikit (60px) */
     position: fixed !important;
-    top: 60px !important; /* Jarakkan dari skor supaya jari boleh tekan skor */
+    top: 65px !important; 
     left: 50% !important;
     transform: translateX(-50%) !important;
-    
-    /* SAIZ: Kunci saiz */
-    width: 90px !important;
-    height: auto !important;
-    
-    /* VISUAL: Lutsinar supaya nampak grid di belakang */
-    background: rgba(0, 0, 0, 0.75) !important;
-    backdrop-filter: blur(3px);
-    color: #00ff90 !important;
-    padding: 8px !important;
-    border: 1px solid rgba(0, 255, 144, 0.5) !important;
-    border-radius: 8px !important;
-    
-    /* LAYER & TEKS */
+    width: 110px !important;
+    padding: 10px !important;
     z-index: 10000000 !important;
-    pointer-events: auto !important;
-    box-sizing: border-box !important;
-    font-family: monospace !important;
-    font-size: 10px !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 12px !important;
     text-align: center !important;
+    border-radius: 8px !important;
+    pointer-events: auto !important;
+
+    /* --- BAHAGIAN WARNA PANEL (Ubah sini) --- */
+    background: #331414E3 !important;   /* Warna Latar Panel */
+    color: #9ECE4AE6 !important;        /* Warna Teks Panel */
+    border: 2px solid #444444 !important; /* Warna Bingkai Panel */
 }
 
 #debugPanel div {
-    margin-bottom: 2px !important;
-    white-space: nowrap !important;
+    margin-bottom: 4px !important;
+    border-bottom: 1px solid #333333 !important;
+    padding-bottom: 2px !important;
 }
 
-/* Butang Skip */
+/* --- BUTANG SKIP --- */
 .btn-skip {
-    margin-top: 6px !important;
+    margin-top: 8px !important;
     width: 100% !important;
-    background: rgba(255, 71, 87, 0.9) !important;
-    color: white !important;
     border: none !important;
-    padding: 5px 0 !important;
-    font-size: 9px !important;
+    padding: 8px 0 !important;
+    font-size: 11px !important;
     font-weight: bold !important;
     border-radius: 4px !important;
     cursor: pointer !important;
+
+    /* --- WARNA BUTANG (Ubah sini) --- */
+    background: #eeeeee !important;   /* Latar Butang */
+    color: #111111 !important;        /* Teks Butang */
 }
 
-.btn-skip:active {
-    background: #ff4757 !important;
-}
-
-/* Highlight Jawapan */
+/* =============================================================
+   HIGHLIGHT JAWAPAN (Dalam Grid)
+   ============================================================= */
 body.debug-on .cell[data-word="true"] {
-    background-color: rgba(0, 255, 144, 0.15) !important;
-    outline: 1px solid rgba(0, 255, 144, 0.6) !important;
+    /* --- WARNA PETAK JAWAPAN (Ubah sini) --- */
+    background-color: #2D407FEB !important; /* Warna latar petak */
+    color: #ffd700 !important;            /* Warna huruf (Contoh: Kuning) */
+    
+    /* --- STYLE GARISAN (Outline) --- */
+    outline: 2px dashed #ffffff !important; /* Warna & gaya garisan */
+    outline-offset: -2px;
 }
