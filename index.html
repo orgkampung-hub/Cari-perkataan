@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cari Kata Pro</title>
+    <title>Cari Kata Pro - Menu</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,54 +11,44 @@
     <div id="menu-screen" class="screen">
         <h1>CARI KATA</h1>
         <div class="category-grid">
-            <!-- Button guna versi cross -->
-            <button onclick="pickCategoryCross('HAIWAN')">🐾 HAIWAN</button>
-            <button onclick="pickCategoryCross('BUAH')">🍎 BUAH</button>
-            <button onclick="pickCategoryCross('NEGARA')">🌍 NEGARA</button>
-            <button onclick="pickCategoryCross('SUKAN')">⚽ SUKAN</button>
-            <button onclick="pickCategoryCross('BENDA')">📦 BENDA</button>
+            <button onclick="goToGame('HAIWAN')">🐾 HAIWAN</button>
+            <button onclick="goToGame('BUAH')">🍎 BUAH</button>
+            <button onclick="goToGame('NEGARA')">🌍 NEGARA</button>
+            <button onclick="goToGame('SUKAN')">⚽ SUKAN</button>
+            <button onclick="goToGame('BENDA')">📦 BENDA</button>
         </div>
         
         <p style="font-size: 0.85rem; color: #666; margin-top: 10px; text-align: center;">
             Nak pilih perkataan? Tap huruf mula dan huruf akhir je!
         </p>
-        <p style="font-size: 0.7rem; color: #999; margin-top: 2px; text-align: center;">
-            akulas * v1.2.1
-        </p>
 
         <div class="custom-section">
             <p>Atau buat senarai sendiri:</p>
             <textarea id="custom-words-input" placeholder="Taip perkataan, asingkan dengan koma..."></textarea>
-            <button class="btn-custom" onclick="startCustomGameCross()">MULA MOD CUSTOM</button>
-        </div>
-    </div>
-
-    <div id="loading-screen" class="screen hidden">
-        <div class="loader"></div>
-        <p>Menyusun grid...</p>
-    </div>
-
-    <div id="game-screen" class="screen hidden">
-        <div class="game-header">
-            <div class="top-bar">
-                <button class="btn-small" onclick="showMenu()">🏠 MENU</button>
-                <button class="btn-hint" onclick="useHint()">💡 HINT (-1)</button>
-            </div>
-            
-            <div class="stats-bar">
-                <span id="score-display">SKOR: 0</span>
-            </div>
-
-            <div id="current-cat-display">KATEGORI</div>
+            <button class="btn-custom" onclick="startCustomGame()">MULA MOD CUSTOM</button>
         </div>
 
-        <div id="grid-container"></div>
-        <ul id="word-list"></ul>
+        <p style="font-size: 0.7rem; color: #999; margin-top: 30px; text-align: center; width: 100%;">
+            akulas * v2.0.0
+        </p>
     </div>
 
-    <!-- Wordbank & scripts -->
-    <script src="words.js"></script>
-    <script src="script.js"></script>
-    <script src="wordbank-cross.js"></script>
+    <script>
+        // Fungsi untuk hantar kategori ke page game.html
+        function goToGame(category) {
+            window.location.href = `game.html?cat=${category}`;
+        }
+
+        // Fungsi untuk mod custom
+        function startCustomGame() {
+            const words = document.getElementById('custom-words-input').value;
+            if (words.trim() !== "") {
+                localStorage.setItem('customWords', words);
+                window.location.href = `game.html?cat=CUSTOM`;
+            } else {
+                alert("Sila masukkan perkataan dahulu!");
+            }
+        }
+    </script>
 </body>
 </html>
