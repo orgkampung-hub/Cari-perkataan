@@ -2,7 +2,7 @@
    ROOT & SCREEN ALIGNMENT (Fix Header Jatuh Ke Bawah)
    ============================================================= */
 #game-screen {
-    justify-content: flex-start !important; /* Paksa kandungan bermula dari atas */
+    justify-content: flex-start !important; 
     padding-top: env(safe-area-inset-top, 15px);
     padding-top: 15px;
     display: flex;
@@ -292,25 +292,24 @@
 }
 
 /* =============================================================
-   LANDSCAPE OPTIMIZATION (v2.1.0 - Wider Side Panel)
+   LANDSCAPE OPTIMIZATION (v2.1.2 - Fixed 14th Row Overflow)
    ============================================================= */
 @media screen and (orientation: landscape) {
     #game-screen {
         flex-direction: row !important;
-        justify-content: center !important;
+        justify-content: space-evenly !important; 
         align-items: center;
-        padding: 10px 30px;
-        gap: 30px; /* Jarak antara panel kiri dan grid */
+        padding: 5px 20px;
+        gap: 20px;
     }
 
-    /* Side Panel (Kiri) - Dilebarkan ke 45% */
     .side-panel {
         display: flex;
         flex-direction: column;
-        width: 45%; 
-        max-width: 450px; 
-        gap: 15px;
-        height: 90vh;
+        width: 38%; 
+        max-width: 400px; 
+        gap: 10px;
+        height: 95vh;
         justify-content: center;
     }
 
@@ -321,30 +320,39 @@
 
     #word-list {
         margin: 0;
-        max-height: 60vh; /* Tinggi sedikit lagi supaya muat banyak kata */
+        max-height: 50vh; 
         overflow-y: auto; 
         justify-content: center;
         background: rgba(255,255,255,0.8);
-        padding: 15px;
+        padding: 10px;
         border-width: 2px;
     }
 
-    /* Grid Container (Kanan) - Maintain Square */
     #grid-container {
-        width: 85vh; 
-        height: 85vh;
-        max-width: 500px;
-        max-height: 500px;
+        width: 80vh; 
+        height: 80vh;
+        max-width: 80vh; 
+        max-height: 80vh;
         margin: 0;
-        flex-shrink: 0; /* Paksa grid jangan mengecil */
+        padding: 4px;
+        flex-shrink: 0;
+        box-sizing: border-box;
     }
 
     .cell {
-        font-size: clamp(0.6rem, 3.2vh, 1.1rem); 
+        font-size: clamp(0.5rem, 3vh, 1rem); 
+        box-shadow: 0 1px 0 #dee2e6;
     }
 
     #toast-msg {
         top: 10px;
+    }
+
+    /* Fixed Debug Position in Landscape */
+    #debugPanel {
+        top: 5px !important;
+        left: 5px !important;
+        transform: none !important;
     }
 }
 
