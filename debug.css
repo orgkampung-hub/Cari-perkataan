@@ -1,6 +1,5 @@
 /* =============================================================
-   DEBUG TOOL - CUSTOMIZABLE VERSION
-   Klik kotak warna di sebelah kod HEX dalam Acode untuk ubah.
+   DEBUG TOOL - CYBERPUNK EDITION (v2.4.0)
    ============================================================= */
 
 body:not(.debug-on) #debugPanel { 
@@ -12,24 +11,25 @@ body:not(.debug-on) #debugPanel {
     top: 65px !important; 
     left: 50% !important;
     transform: translateX(-50%) !important;
-    width: 110px !important;
+    width: 120px !important;
     padding: 10px !important;
     z-index: 10000000 !important;
     font-family: 'Courier New', monospace !important;
-    font-size: 12px !important;
+    font-size: 11px !important;
     text-align: center !important;
-    border-radius: 8px !important;
+    border-radius: 12px !important;
     pointer-events: auto !important;
 
-    /* --- BAHAGIAN WARNA PANEL (Ubah sini) --- */
-    background: #331414E3 !important;   /* Warna Latar Panel */
-    color: #9ECE4AE6 !important;        /* Warna Teks Panel */
-    border: 2px solid #444444 !important; /* Warna Bingkai Panel */
+    /* Warna latar gelap separa telus & teks hijau neon */
+    background: rgba(20, 20, 25, 0.9) !important;   
+    color: #00ff95 !important;        
+    border: 2px solid #00ff95 !important;
+    box-shadow: 0 0 15px rgba(0, 255, 149, 0.3) !important;
 }
 
 #debugPanel div {
     margin-bottom: 4px !important;
-    border-bottom: 1px solid #333333 !important;
+    border-bottom: 1px solid rgba(0, 255, 149, 0.2) !important;
     padding-bottom: 2px !important;
 }
 
@@ -39,25 +39,40 @@ body:not(.debug-on) #debugPanel {
     width: 100% !important;
     border: none !important;
     padding: 8px 0 !important;
-    font-size: 11px !important;
-    font-weight: bold !important;
-    border-radius: 4px !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    border-radius: 6px !important;
     cursor: pointer !important;
-
-    /* --- WARNA BUTANG (Ubah sini) --- */
-    background: #eeeeee !important;   /* Latar Butang */
-    color: #111111 !important;        /* Teks Butang */
+    background: #00ff95 !important;
+    color: #121212 !important;
+    text-transform: uppercase;
 }
 
 /* =============================================================
-   HIGHLIGHT JAWAPAN (Dalam Grid)
+   HIGHLIGHT JAWAPAN (Logic Fix)
    ============================================================= */
+
+/* 1. SEBELUM DIJAWAB (Warna Biru Deep / Kuning Teks) */
 body.debug-on .cell[data-word="true"] {
-    /* --- WARNA PETAK JAWAPAN (Ubah sini) --- */
-    background-color: #2D407FEB !important; /* Warna latar petak */
-    color: #ffd700 !important;            /* Warna huruf (Contoh: Kuning) */
-    
-    /* --- STYLE GARISAN (Outline) --- */
-    outline: 2px dashed #ffffff !important; /* Warna & gaya garisan */
-    outline-offset: -2px;
+    background-color: #1a237e !important; 
+    color: #ffd700 !important;            
+    outline: 2px dashed rgba(255, 215, 0, 0.5) !important;
+    outline-offset: -3px;
+    position: relative;
+    z-index: 5;
+}
+
+/* 2. SELEPAS DIJAWAB (Warna Hijau Gelap supaya tak keliru) */
+/* Kita tambah selector .found untuk override highlight debug */
+body.debug-on .cell[data-word="true"].found {
+    background-color: #1b5e20 !important; /* Hijau hutan */
+    color: #ffffff !important;
+    outline: 2px solid #4caf50 !important; /* Garis padu hijau */
+    opacity: 0.9;
+}
+
+/* 3. EFEK UNTUK CELL BIASA (Supaya jawapan lebih menyerlah) */
+body.debug-on .cell:not([data-word="true"]) {
+    opacity: 0.5; /* Gelapkan sikit huruf yang bukan jawapan */
+    background-color: #f0f0f0 !important;
 }

@@ -1,4 +1,4 @@
-// ================= SOUND ENGINE (WEB AUDIO API) =================
+// ================= SOUND ENGINE (WEB AUDIO API) v2.2.0 =================
 const SoundFX = {
     ctx: null,
 
@@ -8,7 +8,6 @@ const SoundFX = {
         }
     },
 
-    // Fungsi kritikal: Browser perlukan resume() selepas klik pengguna
     async resume() {
         this.init();
         if (this.ctx.state === 'suspended') {
@@ -18,7 +17,6 @@ const SoundFX = {
 
     playNote(freq, type, vol, duration) {
         this.init();
-        // Jangan main jika context masih suspended
         if (this.ctx.state === 'suspended') return;
 
         const osc = this.ctx.createOscillator();
@@ -27,8 +25,12 @@ const SoundFX = {
         osc.type = type;
         osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
         
-        gain.gain.setValueAtTime(vol, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+        // Elakkan bunyi "pop" di permulaan dengan mula dari 0 ke vol dalam 0.01s
+        gain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(vol, this.ctx.currentTime + 0.01);
+        
+        // Turunkan volume secara smooth ke 0.0001 (bukan 0)
+        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
         
         osc.connect(gain);
         gain.connect(this.ctx.destination);
@@ -37,26 +39,31 @@ const SoundFX = {
         osc.stop(this.ctx.currentTime + duration);
     },
 
+    // Bunyi bila user sentuh huruf
     tap() { 
-        this.resume(); // Pastikan aktif setiap kali ada tap
-        this.playNote(440, "sine", 0.05, 0.1); 
+        this.resume();
+        this.playNote(600, "sine", 0.1, 0.1); // Frekuensi tinggi sikit supaya 'sharp'
     }, 
 
+    // Bunyi bila satu perkataan dijumpai
     success() { 
         this.resume();
-        this.playNote(523.25, "square", 0.1, 0.2);
-        setTimeout(() => this.playNote(659.25, "square", 0.1, 0.3), 100);
+        this.playNote(523.25, "square", 0.1, 0.1); // C5
+        setTimeout(() => this.playNote(659.25, "square", 0.1, 0.2), 80); // E5
     },
 
+    // Bunyi bila menang satu level (Tadaa!)
     win() { 
         this.resume();
-        [523.25, 659.25, 783.99, 1046.50].forEach((note, i) => {
-            setTimeout(() => this.playNote(note, "triangle", 0.15, 0.4), i * 150);
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((note, i) => {
+            setTimeout(() => this.playNote(note, "triangle", 0.1, 0.4), i * 100);
         });
     },
 
+    // Bunyi bila salah tarik perkataan
     wrong() { 
         this.resume();
-        this.playNote(150, "sawtooth", 0.2, 0.3); 
+        this.playNote(150, "sawtooth", 0.1, 0.3); 
     } 
 };
