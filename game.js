@@ -277,3 +277,8 @@ function updateStats() {
 window.addEventListener('orientationchange', () => {
     setTimeout(() => { if (grid.length > 0) renderUI(); }, 200);
 });
+function goToMenu() {
+    // Membawa pengguna ke halaman index.html
+    window.location.href = 'index.html';
+}
+

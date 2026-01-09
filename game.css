@@ -1,5 +1,5 @@
 /* =============================================================
-   ROOT & SCREEN ALIGNMENT
+   ROOT & SCREEN ALIGNMENT (Fix Header Jatuh Ke Bawah)
    ============================================================= */
 #game-screen {
     justify-content: flex-start !important; 
@@ -36,11 +36,11 @@
 .stats-bar { 
     flex-grow: 1;
     margin: 0 10px;
-    background: rgba(255, 255, 255, 0.9); /* Sedikit telus */
+    background: #ffffff; 
     padding: 8px 15px; 
     border-radius: 50px; 
     text-align: center; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06); 
     border: 2px solid #3f51b5; 
     display: flex;
     flex-direction: column;
@@ -60,6 +60,7 @@
     color: #7986cb; 
     text-transform: uppercase; 
     letter-spacing: 1px;
+    white-space: nowrap; 
 }
 
 .btn-small, .btn-hint { 
@@ -72,13 +73,15 @@
     justify-content: center; 
     cursor: pointer; 
     transition: 0.2s; 
+    font-weight: bold;
 }
 
 .btn-small { background: #757575; color: white; box-shadow: 0 3px #424242; }
 .btn-hint { background: #ff9800; color: white; box-shadow: 0 3px #e65100; font-size: 1.2rem; }
+.btn-small:active, .btn-hint:active { transform: translateY(2px); box-shadow: 0 1px #424242; }
 
 /* =============================================================
-   WORD LIST
+   WORD LIST (Auto-Expand & No Scroll)
    ============================================================= */
 #word-list { 
     display: flex; 
@@ -89,10 +92,11 @@
     margin: 5px auto 10px auto; 
     padding: 10px;
     max-width: 500px;
-    background: rgba(255, 255, 255, 0.7); /* Efek glass */
-    backdrop-filter: blur(5px); /* Kaburkan bground belakang list */
+    background: rgba(255,255,255,0.6); 
     border-radius: 12px;
     border: 1px dashed #3f51b5;
+    max-height: none; 
+    overflow: visible; 
 }
 
 #word-list li { 
@@ -103,25 +107,33 @@
     font-weight: 800;
     color: #3f51b5;
     border: 2px solid #dee2e6; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
 }
 
 #word-list li.strike { 
     text-decoration: line-through; 
-    opacity: 0.5;
+    background: #f1f2f6 !important; 
+    color: #bdc3c7 !important; 
+    border-color: #ecf0f1 !important;
+    box-shadow: none;
+    opacity: 0.6;
+    transform: scale(0.95);
 }
 
 /* =============================================================
-   GRID & CELLS (FIX UNTUK BACKGROUND GAMBAR)
+   GRID & CELLS (Optimized for Background Image)
    ============================================================= */
 #grid-container { 
     display: grid; 
-    gap: 3px;               
+    gap: 2px;               
     width: 98vw;            
     max-width: 500px; 
-    background: rgba(255, 255, 255, 0.2); /* Lapisan nipis untuk seimbangkan gambar */
-    backdrop-filter: blur(2px);          /* Sedikit kabur untuk naikkan kontras huruf */
-    padding: 8px;           
-    border-radius: 15px; 
+    background: rgba(255, 255, 255, 0.2); 
+    backdrop-filter: blur(2px);
+    padding: 6px;           
+    border-radius: 10px; 
     margin: 0 auto; 
     box-sizing: border-box;
     justify-content: center; 
@@ -130,31 +142,24 @@
 
 .cell { 
     aspect-ratio: 1/1; 
-    /* Gunakan putih pudar supaya gambar belakang nampak tapi huruf tetap jelas */
-    background: rgba(255, 255, 255, 0.65); 
+    background: rgba(255, 255, 255, 0.7); 
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    font-weight: 900; 
-    font-size: clamp(0.7rem, 4.5vw, 1.2rem); 
-    border-radius: 6px;     
-    color: #1a2a3a; 
-    /* Tambah bayang pada teks supaya huruf "timbul" */
-    text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
-    transition: 0.2s; 
+    font-weight: 800; 
+    font-size: clamp(0.6rem, 3.8vw, 1.1rem); 
+    border-radius: 4px;     
+    color: #2c3e50; 
+    transition: 0.1s; 
+    border: none;
+    box-shadow: none; 
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-}
-
-.cell.hinted { 
-    background: #fff9c4 !important; 
-    color: #f57f17 !important; 
 }
 
 .cell.found { 
     background: #4caf50 !important; 
     color: white !important; 
-    text-shadow: none;
     z-index: 2; 
     animation: successPulse 0.4s ease-out; 
 }
@@ -162,7 +167,6 @@
 .cell.selected { 
     background: #00b4d8 !important; 
     color: white !important; 
-    text-shadow: none;
     transform: scale(1.1); 
     z-index: 10; 
     box-shadow: 0 5px 15px rgba(0,180,216,0.4);
@@ -175,45 +179,126 @@
 }
 
 /* =============================================================
-   CUSTOM MODAL & TOAST
+   CUSTOM MODAL (Warna Gelap & Button Menu)
    ============================================================= */
 #custom-modal {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.9); /* Latar belakang luar lebih gelap */
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2000;
     opacity: 0;
     pointer-events: none;
+    transition: 0.3s;
 }
 
-#custom-modal.active { opacity: 1; pointer-events: auto; }
+#custom-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
 
 .modal-content {
-    background: white;
+    background: #1e1e2e; /* Warna gelap untuk box modal */
     padding: 30px;
     border-radius: 25px;
     text-align: center;
     width: 85%;
     max-width: 350px;
+    transform: translateY(20px);
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    border: 2px solid #3f51b5; /* Garisan halus supaya nampak premium */
 }
 
+#custom-modal.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-icon {
+    font-size: 4rem;
+    margin-bottom: 10px;
+    animation: successPulse 1s infinite;
+}
+
+.modal-content h2 { 
+    color: #ffffff; /* Teks putih */
+    margin-bottom: 10px; 
+    font-size: 2rem; 
+    font-weight: 900;
+}
+
+.modal-content p { 
+    color: #bbbbbb; /* Teks kelabu cair */
+    margin-bottom: 25px; 
+    font-weight: 600; 
+}
+
+/* Layout Button dalam Modal */
+.modal-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-next {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 5px #2e7d32;
+    transition: 0.2s;
+    width: 100%;
+}
+
+.btn-menu {
+    background: #d81b60; /* Warna pink/merah untuk menu */
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 5px #ad1457;
+    transition: 0.2s;
+    width: 100%;
+}
+
+.btn-next:active, .btn-menu:active { 
+    transform: translateY(3px); 
+    box-shadow: 0 2px rgba(0,0,0,0.5); 
+}
+
+/* =============================================================
+   TOAST NOTIFICATION (AMARAN)
+   ============================================================= */
 #toast-msg {
     position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%) translateY(-100px);
-    background: #d81b60; 
+    background: rgba(216, 27, 96, 0.95); 
     color: white;
     padding: 12px 25px;
     border-radius: 50px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     z-index: 3000;
-    transition: 0.4s;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    white-space: nowrap;
 }
 
-#toast-msg.show { transform: translateX(-50%) translateY(0); }
+#toast-msg.show {
+    transform: translateX(-50%) translateY(0);
+}
 
 /* =============================================================
    LANDSCAPE OPTIMIZATION
@@ -222,13 +307,17 @@
     #game-screen {
         flex-direction: row !important;
         justify-content: space-evenly !important; 
+        align-items: center;
         padding: 5px 20px;
+        gap: 20px;
     }
 
     .side-panel {
         display: flex;
         flex-direction: column;
         width: 38%; 
+        max-width: 400px; 
+        gap: 10px;
         height: 95vh;
         justify-content: center;
     }
@@ -241,7 +330,7 @@
     }
 
     .cell {
-        font-size: clamp(0.6rem, 4vh, 1.1rem); 
+        font-size: clamp(0.5rem, 3vh, 1rem); 
     }
 }
 
@@ -253,9 +342,14 @@
     top: 180px;               
     left: 50%;                
     transform: translateX(-50%);
-    background: rgba(0,0,0,0.8);
-    color: #00ff90;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
     padding: 6px 10px;
+    background: rgba(0,0,0,0.75);
+    color: #00ff90;
+    font-size: 12px;
+    font-weight: 700;
     border-radius: 6px;
     z-index: 1000;
 }
