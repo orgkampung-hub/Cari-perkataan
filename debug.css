@@ -1,5 +1,6 @@
 /* =============================================================
-   DEBUG TOOL - CYBERPUNK EDITION (v2.4.0)
+   DEBUG TOOL - CYBERPUNK EDITION (v2.4.2)
+   FIXED: Bright Green Found State & Clear View
    ============================================================= */
 
 body:not(.debug-on) #debugPanel { 
@@ -19,12 +20,11 @@ body:not(.debug-on) #debugPanel {
     text-align: center !important;
     border-radius: 12px !important;
     pointer-events: auto !important;
-
-    /* Warna latar gelap separa telus & teks hijau neon */
-    background: rgba(20, 20, 25, 0.9) !important;   
+    background: rgba(20, 20, 25, 0.8) !important;   
     color: #00ff95 !important;        
     border: 2px solid #00ff95 !important;
     box-shadow: 0 0 15px rgba(0, 255, 149, 0.3) !important;
+    backdrop-filter: blur(4px);
 }
 
 #debugPanel div {
@@ -33,7 +33,6 @@ body:not(.debug-on) #debugPanel {
     padding-bottom: 2px !important;
 }
 
-/* --- BUTANG SKIP --- */
 .btn-skip {
     margin-top: 8px !important;
     width: 100% !important;
@@ -49,30 +48,34 @@ body:not(.debug-on) #debugPanel {
 }
 
 /* =============================================================
-   HIGHLIGHT JAWAPAN (Logic Fix)
+   HIGHLIGHT LOGIC 
    ============================================================= */
 
-/* 1. SEBELUM DIJAWAB (Warna Biru Deep / Kuning Teks) */
-body.debug-on .cell[data-word="true"] {
+/* 1. SELEPAS DIJAWAB (WARNA HIJAU TERANG ASAL) */
+/* Kita letak paling atas supaya gameplay utama nampak cerah */
+.cell.found {
+    background-color: #4caf50 !important; /* Hijau Standard Gameplay */
+    color: #ffffff !important;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2) !important;
+    opacity: 1 !important;
+    z-index: 20 !important;
+}
+
+/* 2. CRS HIGHLIGHT (Oren - Untuk Debug) */
+body.debug-on .cell.crs-highlight:not(.found) {
+    background-color: #ff8c00 !important; 
+    color: white !important;
+    border: 2px solid #ffffff !important;
+}
+
+/* 3. SEBELUM DIJAWAB (Biru - Untuk Debug) */
+body.debug-on .cell[data-word="true"]:not(.found):not(.crs-highlight) {
     background-color: #1a237e !important; 
     color: #ffd700 !important;            
-    outline: 2px dashed rgba(255, 215, 0, 0.5) !important;
-    outline-offset: -3px;
-    position: relative;
-    z-index: 5;
 }
 
-/* 2. SELEPAS DIJAWAB (Warna Hijau Gelap supaya tak keliru) */
-/* Kita tambah selector .found untuk override highlight debug */
-body.debug-on .cell[data-word="true"].found {
-    background-color: #1b5e20 !important; /* Hijau hutan */
-    color: #ffffff !important;
-    outline: 2px solid #4caf50 !important; /* Garis padu hijau */
-    opacity: 0.9;
-}
-
-/* 3. EFEK UNTUK CELL BIASA (Supaya jawapan lebih menyerlah) */
-body.debug-on .cell:not([data-word="true"]) {
-    opacity: 0.5; /* Gelapkan sikit huruf yang bukan jawapan */
-    background-color: #f0f0f0 !important;
+/* 4. CELL BIASA (Bukan Jawapan) */
+/* Hanya pudar bila mode debug AKTIF */
+body.debug-on .cell:not([data-word="true"]):not(.crs-highlight):not(.found) {
+    opacity: 0.3;
 }

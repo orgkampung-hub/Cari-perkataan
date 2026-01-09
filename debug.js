@@ -1,6 +1,6 @@
 /**
- * DEBUG TOOL: Cari Kata Pro (v2.3.0)
- * Full Script - Angka Sahaja, Skip Level & History Repeat Check
+ * DEBUG TOOL: Cari Kata Pro (v2.3.1)
+ * Full Script - Angka Sahaja, Skip Level, History Check & CRS Logic
  */
 
 (function() {
@@ -49,7 +49,7 @@
         console.log("Debug Info: Level Skipped Successfully.");
     };
 
-    // Fungsi Update Info (Dengan Pengesan History Repeat)
+    // Fungsi Update Info (Dengan Pengesan History Repeat & CRS Coords)
     window.updateDebugInfo = function(data) {
         const dbgWords = document.getElementById('dbgWords');
         const dbgCross = document.getElementById('dbgCross');
@@ -67,26 +67,26 @@
             let repeatedWords = [];
 
             data.words.forEach(w => {
-                // Jika perkataan sudah ada dalam sejarah grid sebelum ni
                 if (historyWords.has(w)) {
                     repeatCount++;
                     repeatedWords.push(w);
                 }
             });
 
-            // Paparkan jumlah REP (Repeated dari history)
             dbgDup.innerText = "REP: " + repeatCount;
             
-            // Masukkan perkataan grid sekarang ke dalam sejarah untuk grid akan datang
             data.words.forEach(w => historyWords.add(w));
 
-            // Tukar warna jadi oren kalau ada perkataan yang asyik ulang benda sama
             if (repeatCount > 0) {
                 dbgDup.style.color = "#ff9800"; 
-                console.log("Debug: Perkataan dari level lepas muncul kembali:", repeatedWords);
             } else {
                 dbgDup.style.color = "inherit"; 
             }
+        }
+
+        // 3. Logik Tambahan: Log koordinat CRS (oren) ke konsol untuk rujukan
+        if (data.crsCoords && data.crsCoords.length > 0) {
+            console.log(`Debug: ${data.crossCount} CRS detected at:`, data.crsCoords);
         }
     };
 })();
