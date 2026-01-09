@@ -28,18 +28,16 @@
             <button class="btn-custom" onclick="startCustomGame()">MULA MOD CUSTOM</button>
         </div>
 
-        <p style="font-size: 0.7rem; color: #999; margin-top: 30px; text-align: center; width: 100%;">
-            akulas * v2.2.0
+        <p class="version-text">
+            akulas * v2.2.1
         </p>
     </div>
 
     <script>
-        // Fungsi untuk hantar kategori ke page game.html
         function goToGame(category) {
             window.location.href = `game.html?cat=${category}`;
         }
 
-        // Fungsi untuk mod custom
         function startCustomGame() {
             const words = document.getElementById('custom-words-input').value;
             if (words.trim() !== "") {

@@ -1,11 +1,29 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-body { background: #f8f9fa; color: #333; overflow: hidden; touch-action: none; position: relative; }
+
+body { 
+    /* Penambahan latar belakang */
+    background-image: url('bgmenu.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    /* Tetapan asal anda */
+    color: #333; 
+    overflow: hidden; 
+    touch-action: none; 
+    position: relative; 
+    min-height: 100vh;
+}
 
 .screen {
     position: fixed; width: 100vw; height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 15px; background: #f8f9fa; z-index: 10;
+    padding: 15px; 
+    /* Diubah kepada 0.7 (70% putih, 30% telus) */
+    background: rgba(255, 255, 255, 0.7); 
+    z-index: 10;
 }
+
 .hidden { display: none !important; }
 
 h1 { margin-bottom: 20px; color: #1a237e; font-size: 2.2rem; font-weight: 800; }
@@ -21,6 +39,16 @@ button:active { transform: translateY(2px); box-shadow: 0 2px #283593; }
 .custom-section p { font-size: 0.9rem; font-weight: bold; margin-bottom: 8px; color: #555; }
 textarea { width: 100%; height: 60px; padding: 10px; border-radius: 8px; border: 2px solid #3f51b5; margin-bottom: 10px; resize: none; font-size: 1rem; }
 .btn-custom { background: #2e7d32 !important; box-shadow: 0 4px #1b5e20 !important; width: 100%; }
+
+/* Gaya untuk teks versi - Margin dikurangkan untuk rapatkan ke atas */
+.version-text {
+    font-size: 0.75rem;
+    color: #1a237e !important;
+    font-weight: bold;
+    margin-top: 10px; /* Dikurangkan dari 30px ke 10px supaya rapat */
+    text-align: center;
+    width: 100%;
+}
 
 /* Loader */
 .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3f51b5; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: auto; }
