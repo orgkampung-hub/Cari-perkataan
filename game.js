@@ -1,8 +1,10 @@
 /**
  * game.js - Versi Stabil & Kualiti Tinggi
  * Ciri: Anti-Stuck, CRS Optimization, Full Directions
+ * Update: JSON Data Fetching (v2.3.0)
  */
 
+let wordBank = {}; // Dikosongkan untuk diisi melalui JSON
 let gridSize = 14; 
 let grid = [];
 let currentWords = [];
@@ -17,11 +19,26 @@ let wordsHinted = [];
 
 let debugData = { attempts: 0, crossCount: 0 };
 
+// Update: Fungsi fetch untuk muat turun data JSON
+async function loadGameData() {
+    try {
+        const response = await fetch('words.json');
+        if (!response.ok) throw new Error('Fail JSON tidak dijumpai');
+        wordBank = await response.json();
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        // Ambil kategori dari URL, jika tiada ambil kunci pertama dalam JSON
+        currentCategory = urlParams.get('cat') || Object.keys(wordBank)[0];
+        
+        startNewRound(currentCategory);
+    } catch (error) {
+        console.error("Masalah muat turun data:", error);
+        alert("Gagal memuatkan data perkataan. Pastikan words.json wujud!");
+    }
+}
+
 window.onload = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (typeof wordBank === 'undefined') return;
-    currentCategory = urlParams.get('cat') || Object.keys(wordBank)[0];
-    startNewRound(currentCategory);
+    loadGameData(); // Panggil fungsi muat turun data
 };
 
 function startNewRound(cat) {
@@ -277,8 +294,7 @@ function updateStats() {
 window.addEventListener('orientationchange', () => {
     setTimeout(() => { if (grid.length > 0) renderUI(); }, 200);
 });
+
 function goToMenu() {
-    // Membawa pengguna ke halaman index.html
     window.location.href = 'index.html';
 }
-
