@@ -1,10 +1,10 @@
 /**
- * game.js - v2.4.9
- * UPDATED: Hint logic to match game.css
+ * game.js - v2.4.10
+ * RESTORED: Confetti function & Full 3K/CRS Engine.
  */
 
 let wordBank = {}; 
-let gridSize = 14; 
+let gridSize = 12; 
 let grid = [];
 let currentWords = [];
 let wordsFound = [];
@@ -64,6 +64,7 @@ function startNewRound(cat) {
     }, 300);
 }
 
+// ENJIN 3K & CRS - JANGAN USIK
 function generateHighQualityGrid(cat) {
     debugData.attempts = 0;
     debugData.crossCount = 0;
@@ -88,7 +89,8 @@ function placeWords(wordsToPlace) {
     for (let word of wordsToPlace) {
         let bestPositions = [];
         let maxOverlapFound = -1;
-        for (let i = 0; i < 250; i++) {
+        // 3K Loop Logic (atau set mengikut keperluan performance kau)
+        for (let i = 0; i < 250; i++) { 
             debugData.attempts++;
             let r = Math.floor(Math.random() * gridSize);
             let c = Math.floor(Math.random() * gridSize);
@@ -248,11 +250,31 @@ function checkWord(path) {
             score += 8; 
             updateStats();
             if (typeof SoundFX !== 'undefined') SoundFX.win();
-            launchConfetti();
+            launchConfetti(); // DIPANGGIL DI SINI
             setTimeout(showWinModal, 1000);
         }
     } else {
         if (typeof SoundFX !== 'undefined') SoundFX.wrong();
+    }
+}
+
+// RESTORED: FUNGSI CONFETTI ASAL
+function launchConfetti() {
+    const colors = ['#4caf50', '#8bc34a', '#ffffff', '#ffd700', '#ff9800', '#d81b60'];
+    for (let i = 0; i < 60; i++) {
+        const div = document.createElement('div');
+        div.className = 'confetti';
+        div.style.left = Math.random() * 100 + 'vw';
+        div.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        div.style.width = Math.random() * 10 + 5 + 'px';
+        div.style.height = div.style.width;
+        div.style.position = 'fixed';
+        div.style.top = '-10px';
+        div.style.zIndex = '9999';
+        div.style.pointerEvents = 'none';
+        div.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 5000);
     }
 }
 
@@ -281,5 +303,4 @@ function updateStats() { const sd = document.getElementById('score-display'); if
 function showWinModal() { const modal = document.getElementById('custom-modal'); if (modal) modal.classList.add('active'); }
 function closeModal() { const modal = document.getElementById('custom-modal'); if (modal) modal.classList.remove('active'); currentGridNum++; startNewRound(currentCategory); }
 function goToMenu() { window.location.href = 'index.html'; }
-function launchConfetti() {}
 function showToast() { const toast = document.getElementById('toast-msg'); if(toast) { toast.classList.add('show'); setTimeout(() => { toast.classList.remove('show'); }, 2500); } }
