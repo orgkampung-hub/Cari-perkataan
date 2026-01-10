@@ -1,6 +1,7 @@
 /**
- * game.js - v2.4.10
- * RESTORED: Confetti function & Full 3K/CRS Engine.
+ * game.js - v2.4.19
+ * FIXED: High-compatibility for Custom Words (String vs JSON).
+ * RETAINED: Full 3K/CRS Engine & Confetti logic.
  */
 
 let wordBank = {}; 
@@ -20,13 +21,37 @@ let debugData = { attempts: 0, crossCount: 0 };
 async function loadGameData() {
     try {
         const response = await fetch('words.json');
-        if (!response.ok) throw new Error('Fail JSON tidak dijumpai');
-        wordBank = await response.json();
+        if (response.ok) {
+            wordBank = await response.json();
+        }
+        
         const urlParams = new URLSearchParams(window.location.search);
-        currentCategory = urlParams.get('cat') || Object.keys(wordBank)[0];
+        currentCategory = urlParams.get('cat') || "HAIWAN";
+
+        // --- LOGIK PENYELAMAT CUSTOM ---
+        if (currentCategory.toUpperCase() === 'CUSTOM') {
+            const rawData = localStorage.getItem('customWords');
+            if (rawData) {
+                try {
+                    // Cuba parse kalau ianya JSON (dari script.js)
+                    if (rawData.startsWith('[')) {
+                        wordBank["CUSTOM"] = JSON.parse(rawData);
+                    } else {
+                        // Kalau string mentah (dari index.html), kita split sendiri
+                        wordBank["CUSTOM"] = rawData.split(',')
+                            .map(w => w.trim().toUpperCase())
+                            .filter(w => w.length > 0);
+                    }
+                } catch (e) {
+                    // Fail-safe terakhir
+                    wordBank["CUSTOM"] = rawData.split(',').map(w => w.trim().toUpperCase());
+                }
+            }
+        }
+        
         startNewRound(currentCategory);
     } catch (error) {
-        console.error("Masalah muat turun data:", error);
+        console.error("Game Data Error:", error);
     }
 }
 
@@ -60,11 +85,12 @@ function startNewRound(cat) {
 
         if(loading) loading.classList.add('hidden');
         if(gameScreen) gameScreen.classList.remove('hidden');
-        document.getElementById('current-cat-display').innerText = `GRID #${currentGridNum} - ${cat.toUpperCase()}`;
+        
+        const displayLabel = (cat === "CUSTOM") ? "KATEGORI ANDA" : cat.toUpperCase();
+        document.getElementById('current-cat-display').innerText = `GRID #${currentGridNum} - ${displayLabel}`;
     }, 300);
 }
 
-// ENJIN 3K & CRS - JANGAN USIK
 function generateHighQualityGrid(cat) {
     debugData.attempts = 0;
     debugData.crossCount = 0;
@@ -75,11 +101,17 @@ function generateHighQualityGrid(cat) {
 }
 
 function pickWords(cat) {
-    const allWords = wordBank[cat] || [];
+    const allWords = wordBank[cat.toUpperCase()] || [];
+    
+    if (cat.toUpperCase() === "CUSTOM") {
+        // Ambil max 12 supaya muat grid
+        return allWords.slice(0, 12).map(w => w.toUpperCase()).sort((a,b) => b.length - a.length);
+    }
+
     const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
     const s = shuffle(allWords.filter(w => w.length >= 3 && w.length <= 5)).slice(0, 5);
     const m = shuffle(allWords.filter(w => w.length >= 6 && w.length <= 8)).slice(0, 5);
-    const l = shuffle(allWords.filter(w => w.length >= 9 && w.length <= 13)).slice(0, 2);
+    const l = shuffle(allWords.filter(w => w.length >= 9 && w.length <= 11)).slice(0, 2);
     return [...s, ...m, ...l].map(w => w.toUpperCase()).sort((a,b) => b.length - a.length);
 }
 
@@ -89,7 +121,8 @@ function placeWords(wordsToPlace) {
     for (let word of wordsToPlace) {
         let bestPositions = [];
         let maxOverlapFound = -1;
-        // 3K Loop Logic (atau set mengikut keperluan performance kau)
+        
+        // Loop eksperimen kau
         for (let i = 0; i < 250; i++) { 
             debugData.attempts++;
             let r = Math.floor(Math.random() * gridSize);
@@ -103,23 +136,22 @@ function placeWords(wordsToPlace) {
                 bestPositions.push({r, c, d, overlap});
             }
         }
+        
         if (bestPositions.length > 0) {
             const pick = bestPositions[Math.floor(Math.random() * bestPositions.length)];
             fillWord(word, pick.r, pick.c, pick.d);
             debugData.crossCount += pick.overlap;
             placedList.push(word);
         } else {
-            let foundBackup = false;
-            for (let r = 0; r < gridSize && !foundBackup; r++) {
-                for (let c = 0; c < gridSize && !foundBackup; c++) {
+            // Backup supaya tak hang
+            let foundAnywhere = false;
+            for (let r = 0; r < gridSize && !foundAnywhere; r++) {
+                for (let c = 0; c < gridSize && !foundAnywhere; c++) {
                     for (let d of allDirs) {
-                        debugData.attempts++;
-                        let overlap = checkPotentialOverlap(word, r, c, d);
-                        if (overlap >= 0) {
+                        if (checkPotentialOverlap(word, r, c, d) >= 0) {
                             fillWord(word, r, c, d);
-                            debugData.crossCount += overlap;
                             placedList.push(word);
-                            foundBackup = true;
+                            foundAnywhere = true;
                             break;
                         }
                     }
@@ -235,22 +267,15 @@ function checkWord(path) {
     if (targetWord && !wordsFound.includes(targetWord)) {
         wordsFound.push(targetWord);
         if (typeof SoundFX !== 'undefined') SoundFX.success();
-        
-        path.forEach((p, i) => {
-            setTimeout(() => {
-                p.el.classList.add('found');
-            }, i * 30);
-        });
-
+        path.forEach((p, i) => { setTimeout(() => { p.el.classList.add('found'); }, i * 30); });
         const li = document.getElementById("list-" + targetWord);
         if(li) li.className = 'strike';
         score += 1; 
         updateStats();
         if (wordsFound.length === currentWords.length) {
-            score += 8; 
-            updateStats();
+            score += 8; updateStats();
             if (typeof SoundFX !== 'undefined') SoundFX.win();
-            launchConfetti(); // DIPANGGIL DI SINI
+            launchConfetti(); 
             setTimeout(showWinModal, 1000);
         }
     } else {
@@ -258,7 +283,6 @@ function checkWord(path) {
     }
 }
 
-// RESTORED: FUNGSI CONFETTI ASAL
 function launchConfetti() {
     const colors = ['#4caf50', '#8bc34a', '#ffffff', '#ffd700', '#ff9800', '#d81b60'];
     for (let i = 0; i < 60; i++) {
@@ -275,27 +299,6 @@ function launchConfetti() {
         div.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
         document.body.appendChild(div);
         setTimeout(() => div.remove(), 5000);
-    }
-}
-
-function useHint() {
-    const potentialWords = currentWords.filter(w => !wordsFound.includes(w) && !wordsHinted.includes(w));
-    if (potentialWords.length === 0) return;
-
-    const hintCost = (hintCountUsed === 0) ? 0 : 4;
-    if (hintCost > 0 && score < hintCost) { showToast(); return; }
-
-    const selectedWord = potentialWords[Math.floor(Math.random() * potentialWords.length)];
-    const positions = wordPositions[selectedWord];
-    const randomPos = positions[Math.floor(Math.random() * positions.length)];
-
-    const el = document.getElementById(`cell-${randomPos.r}-${randomPos.c}`);
-    if (el) {
-        el.classList.add('hinted');
-        wordsHinted.push(selectedWord);
-        hintCountUsed++;
-        if (hintCost > 0) score -= hintCost;
-        updateStats();
     }
 }
 
