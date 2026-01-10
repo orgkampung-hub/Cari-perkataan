@@ -5,7 +5,7 @@
  */
 
 let wordBank = {}; 
-let gridSize = 12; 
+let gridSize = 10; 
 let grid = [];
 let currentWords = [];
 let wordsFound = [];
