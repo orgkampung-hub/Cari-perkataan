@@ -123,7 +123,7 @@ function placeWords(wordsToPlace) {
         let maxOverlapFound = -1;
         
         // Loop eksperimen kau
-        for (let i = 0; i < 250; i++) { 
+        for (let i = 0; i < 350; i++) { 
             debugData.attempts++;
             let r = Math.floor(Math.random() * gridSize);
             let c = Math.floor(Math.random() * gridSize);
