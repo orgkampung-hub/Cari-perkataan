@@ -1,7 +1,7 @@
 /**
- * game.js - v2.8.67
- * STATUS: FIXED CRS LOGIC FOR COLORBLIND ACCESSIBILITY
- * RETAINED: All original logic (v2.8.66) & sync with debug.js.
+ * game.js - v3.0.1
+ * STATUS: FIXED CRS LOGIC + SMOOTH WAVE ANIMATION (TAP SYSTEM)
+ * RETAINED: All original logic & sync with debug.js.
  */
 
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyWEF1_2o7TXhuREdwl4dxr9WMqSNfoEWCdQa2FRvlrkMA-fVAMpghhMuf1wnXuSit4/exec";
@@ -73,7 +73,7 @@ function fillEmpty() {
 }
 
 // ==========================================
-// BAHAGIAN YANG DIKEMASKINI (LOGIK CRS)
+// BAHAGIAN YANG DIKEMASKINI (LOGIK CRS & WAVE)
 // ==========================================
 function renderUI() {
     const container = document.getElementById('grid-container');
@@ -81,7 +81,6 @@ function renderUI() {
     container.innerHTML = '';
     container.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
 
-    // 1. KIRA PENGGUNAAN SETIAP PETAK (UNTUK CRS)
     const cellUsage = {};
     for (let w in wordPositions) {
         if (wordPositions[w]) {
@@ -100,19 +99,18 @@ function renderUI() {
             const key = `${r}-${c}`;
             const usageCount = cellUsage[key] || 0;
 
-            // Jika petak ini adalah sebahagian daripada mana-mana jawapan
             if (usageCount > 0) {
                 el.setAttribute('data-word', 'true');
-                
-                // HANYA LETAK CRS-HIGHLIGHT JIKA BERTINDIH (>1)
                 if (isDebugActive && usageCount > 1) {
                     el.classList.add('crs-highlight');
                 }
             }
 
+            // KEMASKINI: Letak delay 0 untuk perkataan yang sedia ada dijumpai
             for (let w of wordsFound) {
                 if (wordPositions[w] && wordPositions[w].some(p => p.r === r && p.c === c)) {
                     el.classList.add('found');
+                    el.style.setProperty('--d', 0); 
                 }
             }
             if (activeHints.some(h => h.r === r && h.c === c)) el.classList.add('hint-highlight');
@@ -141,7 +139,6 @@ function renderUI() {
         });
     }
 }
-// ==========================================
 
 function handleTap(el, r, c) {
     if (typeof SoundFX !== 'undefined') SoundFX.tap();
@@ -168,22 +165,40 @@ function resetSelection() { if (firstCell) firstCell.el.classList.remove('select
 function checkWord(path) {
     const word = path.map(p => p.char).join(''), rev = word.split('').reverse().join('');
     let target = currentWords.includes(word) ? word : (currentWords.includes(rev) ? rev : "");
+    
     if (target && !wordsFound.includes(target)) {  
         wordsFound.push(target);  
+        
+        // KEMASKINI: Kesan Wave untuk Tap (Urutan path)
+        path.forEach((p, index) => {
+            if (p.el) {
+                p.el.style.setProperty('--d', index); 
+                p.el.classList.add('found');
+            }
+        });
+
         const now = Date.now();
         if (now - lastFoundTime < 5000) comboLevel++; else comboLevel = 0;
         lastFoundTime = now;
+        
         if (typeof SoundFX !== 'undefined') {
             if (comboLevel > 0) SoundFX.playCombo(comboLevel); else SoundFX.success();
         }
-        renderUI();
+
+        // Kemaskini Word List tanpa renderUI penuh (elak lag/reset animasi)
+        const listItem = document.getElementById("list-" + target);
+        if(listItem) listItem.className = 'strike';
+
         score += 1; updateStats();  
+        
         if (wordsFound.length === currentWords.length) { 
             score += 10; stopTimer(); 
             if (typeof SoundFX !== 'undefined') SoundFX.win(); 
-            setTimeout(showWinModal, 800); 
+            setTimeout(showWinModal, 1200); 
         }  
-    } else { if (typeof SoundFX !== 'undefined') SoundFX.wrong(); }
+    } else { 
+        if (typeof SoundFX !== 'undefined') SoundFX.wrong(); 
+    }
 }
 
 function updateStats() {
