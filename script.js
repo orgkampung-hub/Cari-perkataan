@@ -1,14 +1,24 @@
-// script.js
+/**
+ * script.js - v2.6.1
+ * Navigasi Menu Utama & Highscore
+ */
 
 // Fungsi untuk hantar kategori ke page game.html
 function pickCategoryCross(category) {
-    // Kita terus hantar ke game.html dengan parameter kategori di URL
     window.location.href = `game.html?cat=${category}`;
+}
+
+// Fungsi untuk navigasi ke halaman Highscore
+function goToHighscore() {
+    window.location.href = 'high.html?action=home';
 }
 
 // Fungsi untuk mod custom
 function startCustomGameCross() {
-    const input = document.getElementById('custom-words-input').value;
+    const inputEl = document.getElementById('custom-words-input');
+    if (!inputEl) return;
+    
+    const input = inputEl.value;
     let words = input.split(/[,]+/).map(w => w.trim().toUpperCase()).filter(w => w.length > 0);
     
     if (words.length < 2) { 
@@ -16,7 +26,6 @@ function startCustomGameCross() {
         return; 
     }
     
-    // Grid size tetap 12 ikut setting asal
     const gridSize = 12; 
     const tooLong = words.find(w => w.length > gridSize);
     
@@ -25,7 +34,7 @@ function startCustomGameCross() {
         return; 
     }
 
-    // Simpan senarai kata dalam localStorage supaya game.js boleh baca nanti
+    // Simpan senarai kata dalam localStorage
     localStorage.setItem('customWords', JSON.stringify(words.slice(0, 15)));
     window.location.href = `game.html?cat=CUSTOM`;
 }

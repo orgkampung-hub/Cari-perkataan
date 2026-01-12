@@ -9,44 +9,32 @@
 <body>
 
     <div id="menu-screen" class="screen">
-        <h1>CARI KATA</h1>
+        <h1 class="game-title">CARI KATA</h1>
+        
         <div class="category-grid">
-            <button onclick="goToGame('HAIWAN')">🐾 HAIWAN</button>
-            <button onclick="goToGame('BUAH')">🍎 BUAH</button>
-            <button onclick="goToGame('NEGARA')">🌍 NEGARA</button>
-            <button onclick="goToGame('SUKAN')">⚽ SUKAN</button>
-            <button onclick="goToGame('BENDA')">📦 BENDA</button>
+            <button class="btn-cat" onclick="pickCategoryCross('HAIWAN')">🐾 HAIWAN</button>
+            <button class="btn-cat" onclick="pickCategoryCross('BUAH')">🍎 BUAH</button>
+            <button class="btn-cat" onclick="pickCategoryCross('NEGARA')">🌍 NEGARA</button>
+            <button class="btn-cat" onclick="pickCategoryCross('SUKAN')">⚽ SUKAN</button>
+            <button class="btn-cat" onclick="pickCategoryCross('BENDA')">📦 BENDA</button>
+            <button class="btn-highscore" onclick="goToHighscore()">🏆 SKOR</button>
         </div>
         
-        <p style="font-size: 0.85rem; color: #666; margin-top: 10px; text-align: center;">
-            Nak pilih perkataan? Tap huruf mula dan huruf akhir je!
-        </p>
+        <div class="info-box">
+            <p>Nak pilih perkataan? Tap huruf mula dan huruf akhir je!</p>
+        </div>
 
         <div class="custom-section">
             <p>Atau buat senarai sendiri:</p>
             <textarea id="custom-words-input" placeholder="Taip perkataan, asingkan dengan koma..."></textarea>
-            <button class="btn-custom" onclick="startCustomGame()">MULA MOD CUSTOM</button>
+            <button class="btn-custom" onclick="startCustomGameCross()">MULA MOD CUSTOM</button>
         </div>
 
         <p class="version-text">
-            akulas * v2.6.0
+            akulas * v3.0.0
         </p>
     </div>
 
-    <script>
-        function goToGame(category) {
-            window.location.href = `game.html?cat=${category}`;
-        }
-
-        function startCustomGame() {
-            const words = document.getElementById('custom-words-input').value;
-            if (words.trim() !== "") {
-                localStorage.setItem('customWords', words);
-                window.location.href = `game.html?cat=CUSTOM`;
-            } else {
-                alert("Sila masukkan perkataan dahulu!");
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

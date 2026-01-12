@@ -1,5 +1,5 @@
 /* =============================================================
-   ROOT & SCREEN ALIGNMENT (Fix Header Jatuh Ke Bawah)
+   ROOT & SCREEN ALIGNMENT
    ============================================================= */
 #game-screen {
     justify-content: flex-start !important; 
@@ -18,372 +18,156 @@
 .game-header { 
     width: 100%; 
     max-width: 500px; 
-    margin-top: 0; 
     margin-bottom: 5px; 
     display: flex; 
     flex-direction: column; 
     gap: 8px; 
+    align-items: center; 
 }
 
 .top-bar { 
     display: flex; 
     justify-content: space-between; 
-    align-items: center; 
+    align-items: stretch; 
     width: 100%; 
-    padding: 0 5px;
-}
-
-.stats-bar { 
-    flex-grow: 1;
-    margin: 0 10px;
-    background: #ffffff; 
-    padding: 8px 15px; 
-    border-radius: 50px; 
-    text-align: center; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06); 
-    border: 2px solid #3f51b5; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-#score-display { 
-    font-weight: 900; 
-    color: #d81b60; 
-    font-size: 1.4rem; 
-    line-height: 1;
-}
-
-#current-cat-display { 
-    font-size: 0.65rem; 
-    font-weight: 800; 
-    color: #7986cb; 
-    text-transform: uppercase; 
-    letter-spacing: 1px;
-    white-space: nowrap; 
+    padding: 10px;
+    gap: 10px;
+    box-sizing: border-box;
 }
 
 .btn-small, .btn-hint { 
     border: none;
-    border-radius: 50%; 
-    width: 45px;
-    height: 45px;
+    border-radius: 15px; 
+    width: 58px;
+    height: 58px;
     display: flex;
+    flex-direction: column;
     align-items: center; 
     justify-content: center; 
     cursor: pointer; 
-    transition: 0.2s; 
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
     font-weight: bold;
+    position: relative;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
 }
 
-.btn-small { background: #757575; color: white; box-shadow: 0 3px #424242; }
-.btn-hint { background: #ff9800; color: white; box-shadow: 0 3px #e65100; font-size: 1.2rem; }
-.btn-small:active, .btn-hint:active { transform: translateY(2px); box-shadow: 0 1px #424242; }
+.btn-small { background: linear-gradient(145deg, #3f51b5, #303f9f); color: white; font-size: 1.4rem; }
+.btn-hint { background: linear-gradient(145deg, #ff9800, #f57c00); color: white; padding: 0; }
+.btn-hint span { font-size: 1.3rem; line-height: 1; }
+
+#hint-cost-label {
+    font-size: 0.7rem; font-weight: 900; color: #fff;
+    background: rgba(0, 0, 0, 0.3); padding: 1px 6px; border-radius: 5px; margin-top: 2px;
+}
+
+.stats-bar { 
+    flex-grow: 1; background: rgba(255, 255, 255, 0.95); 
+    padding: 5px 10px; border-radius: 15px; text-align: center; 
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05), 0 4px 10px rgba(0,0,0,0.05); 
+    border: 2px solid #3f51b5; display: flex; flex-direction: column; justify-content: center;
+}
+
+#score-display { font-weight: 900; color: #d81b60; font-size: 1.7rem; line-height: 1; }
+#current-cat-display { font-size: 0.6rem; font-weight: 800; color: #5c6bc0; text-transform: uppercase; margin-top: 3px; }
+
+.timer-container {
+    background: #12121e; padding: 6px 25px; border-radius: 20px;
+    display: flex; align-items: center; gap: 10px; border: 2px solid #3f51b5; margin-top: 5px; 
+}
+#timer-label { font-weight: 900; color: #ffeb3b; font-size: 1.2rem; font-family: 'Courier New', Courier, monospace; }
 
 /* =============================================================
-   WORD LIST (Auto-Expand & No Scroll)
+   GRID & WORD LIST
    ============================================================= */
 #word-list { 
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 6px; 
-    list-style: none; 
-    justify-content: center; 
-    margin: 5px auto 10px auto; 
-    padding: 10px;
-    max-width: 500px;
-    background: rgba(255,255,255,0.6); 
-    border-radius: 12px;
-    border: 1px dashed #3f51b5;
-    max-height: none; 
-    overflow: visible; 
+    display: flex; flex-wrap: wrap; gap: 6px; list-style: none; justify-content: center; 
+    margin: 15px auto; padding: 10px; max-width: 500px;
+    background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px dashed #3f51b5;
 }
-
 #word-list li { 
-    padding: 5px 12px; 
-    background: #ffffff; 
-    border-radius: 20px; 
-    font-size: 0.75rem; 
-    font-weight: 800;
-    color: #3f51b5;
-    border: 2px solid #dee2e6; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-    text-transform: uppercase;
+    padding: 5px 12px; background: #ffffff; border-radius: 20px; font-size: 0.75rem; 
+    font-weight: 800; color: #3f51b5; border: 2px solid #dee2e6; text-transform: uppercase;
 }
+#word-list li.strike { text-decoration: line-through; background: #f1f2f6 !important; color: #bdc3c7 !important; opacity: 0.6; }
 
-#word-list li.strike { 
-    text-decoration: line-through; 
-    background: #f1f2f6 !important; 
-    color: #bdc3c7 !important; 
-    border-color: #ecf0f1 !important;
-    box-shadow: none;
-    opacity: 0.6;
-    transform: scale(0.95);
-}
-
-/* =============================================================
-   GRID & CELLS (Optimized for Background Image)
-   ============================================================= */
 #grid-container { 
-    display: grid; 
-    gap: 2px;               
-    width: 98vw;            
-    max-width: 500px; 
-    background: rgba(255, 255, 255, 0.2); 
-    backdrop-filter: blur(2px);
-    padding: 6px;           
-    border-radius: 10px; 
-    margin: 0 auto; 
-    box-sizing: border-box;
-    justify-content: center; 
-    align-content: center;
+    display: grid; gap: 2px; width: 98vw; max-width: 500px; 
+    background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(2px);
+    padding: 6px; border-radius: 10px; margin: 10px auto 0 auto; box-sizing: border-box;
 }
-
 .cell { 
-    aspect-ratio: 1/1; 
-    background: rgba(255, 255, 255, 0.7); 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-weight: 800; 
-    font-size: clamp(0.6rem, 3.8vw, 1.1rem); 
-    border-radius: 4px;     
-    color: #2c3e50; 
-    transition: 0.1s; 
-    border: none;
-    box-shadow: none; 
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    position: relative; /* Tambah ini untuk z-index */
+    aspect-ratio: 1/1; background: rgba(255, 255, 255, 0.7); display: flex; 
+    align-items: center; justify-content: center; font-weight: 800; 
+    font-size: clamp(0.6rem, 3.8vw, 1.1rem); border-radius: 4px; color: #2c3e50; 
 }
+.cell.found { background: #4caf50 !important; color: white !important; animation: successPulse 0.4s ease-out; }
+.cell.selected { background: #00b4d8 !important; color: white !important; transform: scale(1.1); z-index: 15; }
 
-/* --- VISUAL HINT (KUNING) --- */
-.cell.hinted:not(.found) { 
-    background-color: #ffeb3b !important; 
-    color: #000000 !important; 
-    font-weight: 900 !important;
-    border: 2px solid #f9a825 !important;
-    box-shadow: 0 0 10px rgba(255, 235, 59, 0.8) !important;
-    z-index: 5; /* Atas daripada cell biasa */
-    animation: pulse-hint 1s infinite alternate;
-}
-
-@keyframes pulse-hint {
-    from { transform: scale(1); }
-    to { transform: scale(1.08); }
-}
-
-.cell.found { 
-    background: #4caf50 !important; 
-    color: white !important; 
-    z-index: 10; /* Lebih tinggi dari hinted */
-    animation: successPulse 0.4s ease-out; 
-}
-
-.cell.selected { 
-    background: #00b4d8 !important; 
-    color: white !important; 
-    transform: scale(1.1); 
-    z-index: 15; 
-    box-shadow: 0 5px 15px rgba(0,180,216,0.4);
-}
-
-@keyframes successPulse { 
-    0% { transform: scale(1); } 
-    50% { transform: scale(1.15); } 
-    100% { transform: scale(1); } 
-}
+/* DEBUG MODE HIGHLIGHT (Ini yang kau nak) */
+.crs-highlight { border: 2px solid #ff4081 !important; box-shadow: inset 0 0 5px rgba(255,64,129,0.5); }
 
 /* =============================================================
-   CUSTOM MODAL (Warna Gelap & Button Menu)
+   MODAL & OVERLAYS (SAMA LEBAR & SERAGAM)
    ============================================================= */
 #custom-modal {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.9); /* Latar belakang luar lebih gelap */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.3s;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9); display: flex;
+    align-items: center; justify-content: center;
+    z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s;
 }
-
-#custom-modal.active {
-    opacity: 1;
-    pointer-events: auto;
-}
+#custom-modal.active { opacity: 1; pointer-events: auto; }
 
 .modal-content {
-    background: #1e1e2e; /* Warna gelap untuk box modal */
-    padding: 30px;
-    border-radius: 25px;
-    text-align: center;
-    width: 85%;
-    max-width: 350px;
-    transform: translateY(20px);
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-    border: 2px solid #3f51b5; /* Garisan halus supaya nampak premium */
+    background: #12121e; padding: 25px; border-radius: 25px;
+    text-align: center; width: 85%; max-width: 350px;
+    border: 3px solid #3f51b5; box-shadow: 0 0 30px rgba(63, 81, 181, 0.5);
 }
 
-#custom-modal.active .modal-content {
-    transform: translateY(0);
+#modal-stats-display {
+    background: rgba(255, 255, 255, 0.05); border: 2px solid #ffeb3b; 
+    padding: 15px; border-radius: 20px; margin: 15px 0 20px 0;
+    font-size: 1.3rem; font-weight: 900; color: #ffeb3b;
 }
 
-.modal-icon {
-    font-size: 4rem;
-    margin-bottom: 10px;
-    animation: successPulse 1s infinite;
+#player-name-input {
+    width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #3f51b5;
+    font-size: 1.1rem; font-weight: 800; text-align: center; margin-bottom: 15px;
+    box-sizing: border-box;
 }
 
-.modal-content h2 { 
-    color: #ffffff; /* Teks putih */
-    margin-bottom: 10px; 
-    font-size: 2rem; 
-    font-weight: 900;
+.modal-buttons { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+
+/* Butang Seragam */
+.btn-next, .btn-menu {
+    border: none; padding: 15px !important; border-radius: 15px !important;
+    font-size: 1rem !important; font-weight: 900; width: 100% !important;
+    cursor: pointer; transition: 0.2s; text-transform: uppercase; box-sizing: border-box;
 }
 
-.modal-content p { 
-    color: #bbbbbb; /* Teks kelabu cair */
-    margin-bottom: 25px; 
-    font-weight: 600; 
-}
+.btn-next { background: linear-gradient(145deg, #00e676, #00c853) !important; color: #003300 !important; box-shadow: 0 4px 0 #008136; }
+.btn-menu { background: #3f51b5 !important; color: #fff !important; box-shadow: 0 4px 0 #1a237e; }
 
-/* Layout Button dalam Modal */
-.modal-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
+.btn-next:active, .btn-menu:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.5); }
 
-.btn-next {
-    background: #4caf50;
-    color: white;
-    border: none;
-    padding: 15px 40px;
-    border-radius: 50px;
-    font-size: 1.2rem;
-    font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 5px #2e7d32;
-    transition: 0.2s;
-    width: 100%;
-}
-
-.btn-menu {
-    background: #d81b60; /* Warna pink/merah untuk menu */
-    color: white;
-    border: none;
-    padding: 12px 40px;
-    border-radius: 50px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    cursor: pointer;
-    box-shadow: 0 5px #ad1457;
-    transition: 0.2s;
-    width: 100%;
-}
-
-.btn-next:active, .btn-menu:active { 
-    transform: translateY(3px); 
-    box-shadow: 0 2px rgba(0,0,0,0.5); 
-}
-
-/* =============================================================
-   TOAST NOTIFICATION (AMARAN)
-   ============================================================= */
 #toast-msg {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-100px);
-    background: rgba(216, 27, 96, 0.95); 
-    color: white;
-    padding: 12px 25px;
-    border-radius: 50px;
-    font-weight: 800;
-    font-size: 0.9rem;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    z-index: 3000;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: none;
-    white-space: nowrap;
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+    background: rgba(216, 27, 96, 0.95); color: white; padding: 12px 25px; 
+    border-radius: 50px; font-weight: 800; z-index: 3000; transition: 0.4s;
 }
-
-#toast-msg.show {
-    transform: translateX(-50%) translateY(0);
-}
-
+#toast-msg.show { transform: translateX(-50%) translateY(0); }
+@keyframes successPulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
 /* =============================================================
-   LANDSCAPE OPTIMIZATION
+   HINT HIGHLIGHT (TAMBAHAN BARU)
    ============================================================= */
-@media screen and (orientation: landscape) {
-    #game-screen {
-        flex-direction: row !important;
-        justify-content: space-evenly !important; 
-        align-items: center;
-        padding: 5px 20px;
-        gap: 20px;
-    }
-
-    .side-panel {
-        display: flex;
-        flex-direction: column;
-        width: 38%; 
-        max-width: 400px; 
-        gap: 10px;
-        height: 95vh;
-        justify-content: center;
-    }
-
-    #grid-container {
-        width: 80vh; 
-        height: 80vh;
-        max-width: 80vh; 
-        max-height: 80vh;
-    }
-
-    .cell {
-        font-size: clamp(0.5rem, 3vh, 1rem); 
-    }
+.cell.hint-highlight {
+    background: #ff4081 !important; /* Warna pink pekat supaya kontra dengan grid putih/biru */
+    color: white !important;
+    box-shadow: 0 0 10px #ff4081;
+    z-index: 10;
+    animation: hintPulse 1s infinite alternate;
 }
 
-/* =============================================================
-   🔧 DEBUG PANEL
-   ============================================================= */
-#debugPanel {
-    position: absolute;       
-    top: 180px;               
-    left: 50%;                
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding: 6px 10px;
-    background: rgba(0,0,0,0.75);
-    color: #00ff90;
-    font-size: 12px;
-    font-weight: 700;
-    border-radius: 6px;
-    z-index: 1000;
-}
-body:not(.debug-on) #debugPanel { display: none; }
-/* --- Efek Confetti (Tambah kat bawah sekali) --- */
-.confetti {
-    width: 10px;
-    height: 10px;
-    position: fixed;
-    top: -10px;
-    z-index: 9999;
-    pointer-events: none;
-    animation: fall linear forwards;
-}
-
-@keyframes fall {
-    to {
-        transform: translateY(105vh) rotate(720deg);
-    }
+@keyframes hintPulse {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0.8; transform: scale(1.05); }
 }
