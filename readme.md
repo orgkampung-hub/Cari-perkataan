@@ -1,49 +1,55 @@
-# 🧩 Word Search Arena - Web Game
+# 🧩 Word Search Arena - Web Game (v4.1.0)
 
-Game mencari perkataan berasaskan web yang dinamik, responsif, dan dilengkapi dengan sistem Leaderboard masa nyata menggunakan Google Sheets API.
+Game mencari perkataan berasaskan web yang dinamik, responsif, dan dioptimumkan untuk pengalaman "Premium Mobile Gaming".
 
-## 🚀 Ciri-Ciri Utama
-- **Penjanaan Grid Dinamik**: Perkataan dijana secara automatik setiap kali permainan bermula.
-- **Sistem Skor Modular**: Pengiraan markah berdasarkan panjang perkataan, bonus kelajuan, dan penalti penggunaan 'hint'.
-- **Leaderboard Global**: Skor disimpan dan dipaparkan terus dari Google Sheets.
-- **Reka Bentuk Responsif**: Dioptimumkan untuk paparan peranti mudah alih (Mobile-first).
-- **Efek Bunyi & Animasi**: Memberi maklum balas visual dan audio (Syabas Modal & Sound Engine).
+## 🚀 Ciri-Ciri Utama (Update v4.1.0)
+- **Dynamic Avatar (DiceBear)**: Menjana avatar unik secara automatik berdasarkan nama pemain menggunakan API DiceBear.
+- **Player Bar & Profile**: Paparan identiti pemain (Nama & Avatar) secara real-time dlm permainan.
+- **Tag Kategori "Gantung"**: UI kategori yang menonjol tanpa mengganggu ruang grid utama.
+- **Sistem Tutorial Terintegrasi**: Panduan interaktif 2-langkah untuk pemain baru dengan sistem memori (Local Storage).
+- **Modular Scoring & Leaderboard**: Pengiraan markah kompleks dengan integrasi Google Sheets API.
 
 ## 📂 Struktur Fail (Architecture)
-Projek ini menggunakan pendekatan **Vanilla JavaScript Modular** (Global Scope) untuk kestabilan dan kemudahan penyelenggaraan.
 
-### 📜 JavaScript
-- `j_game.js` : Pengawal utama (Controller) logik permainan dan kemenangan.
-- `j_score.js` : Modul kalkulator skor (Centralized Score Tuning).
-- `j_timer.js` : Sistem stopwatch (MM:SS) dan pengurus data masa.
-- `j_modal.js` : Menguruskan paparan pop-up kemenangan dan penghantaran data ke API.
-- `j_generator.js` : Logik penempatan perkataan dalam grid.
-- `j_highscore.js` : Mengambil dan menyusun (sorting) data Top 10 dari Google Sheets.
+### 📜 JavaScript (Logik & Data)
+- **j_game.js** : **Controller Utama**. Menguruskan aliran permainan, paparan profil pemain, dan integrasi antara modul.
+- **j_generator.js** : **Engine Grid**. Logik penempatan perkataan secara rawak/kategori dlm grid.
+- **j_interaction.js** : Menguruskan input sentuhan (touch/drag) pemain pada grid.
+- **j_score.js** : **Kalkulator Skor**. Menguruskan poin, bonus kelajuan, dan penalti.
+- **j_timer.js** : Sistem masa (Stopwatch) dan pemformatan `MM:SS`.
+- **j_modal.js** : Menguruskan UI kemenangan dan penghantaran skor ke Leaderboard.
+- **j_tuto.js** : Logik sistem tutorial interaktif (Show/Hide/Memory).
+- **j_hint.js** : Sistem bantuan (Lightbulb) untuk mendedahkan huruf.
+- **j_sound.js** : Pengurus kesan bunyi (SFX) untuk setiap aksi.
 
-### 🎨 CSS (Styling)
-- `c_game.css` : Gaya umum layout permainan.
-- `c_grid.css` : Susun atur grid dan sel perkataan.
-- `c_modal.css` : Animasi dan gaya kotak kemenangan.
-- `c_header.css` : Gaya bahagian atas (Skor & Timer).
+### 🎨 CSS (Rupa Paras & Animasi)
+- **c_game.css** : **Layout Global**. Menggunakan *Flexbox* untuk memastikan grid sentiasa maksima mengikut saiz skrin.
+- **c_header.css** : Gaya bahagian skor, masa, dan butang navigasi atas.
+- **c_grid.css** : Rekabentuk sel grid dan kesan visual semasa pemilihan huruf.
+- **c_modal.css** : Animasi `popIn` untuk kotak kemenangan dan profil.
+- **c_hint.css** : Kesan visual khas untuk huruf yang dibantu oleh sistem hint.
 
-## ⚙️ Integrasi Google Sheets (Backend)
-Permainan ini menggunakan **Google Apps Script (GAS)** sebagai jambatan antara Game dan Google Sheets.
+## ⚙️ Integrasi Backend (Google Sheets)
+Sistem ini menggunakan **Google Apps Script (GAS)** sebagai pengurus pangkalan data tanpa pelayan (Serverless).
 
-**Format Data di Google Sheets:**
-1. `nama` (Plain Text)
-2. `skor` (Number)
-3. `masa` (Plain Text - Format `00:00`)
+- **Endpoint**: Google Apps Script Web App URL.
+- **Metod**: `POST` (Simpan Skor) & `GET` (Ambil Top 10).
+- **Ranking Priority**: 
+  1. Skor Tertinggi (Primary)
+  2. Masa Terpantas (Secondary - jika skor seri)
 
-**Logik Ranking:**
-Data disusun mengikut **Skor Tertinggi** terlebih dahulu. Sekiranya skor seri, pemain dengan **Masa Terpantas** akan menduduki tangga teratas.
+## 🛠️ Nota Penyelenggaraan (Developer Tips)
 
-## 🛠️ Cara Penyelenggaraan
+### Update Versi & Branding
+Untuk menukar label versi atau nama pembangun, cari bahagian `<footer>` dalam `index.html`.
 
-### Mengubah Logik Skor
-Buka `j_score.js` dan ubah nilai dalam objek `settings`:
-```javascript
-settings: {
-    pointsPerLetter: 10,
-    speedBonusLimit: 15,
-    hintPenalty: 0.5
-}
+### Menambah Kategori Baru
+1. Tambah data perkataan dalam `j_generator.js`.
+2. Tambah butang kategori dlm `index.html` dengan fungsi `pickCategoryCross('nama_kategori')`.
+
+### Melaras Kesukaran
+Buka `j_score.js` untuk melaras `pointsPerLetter` atau `j_hint.js` untuk mengehadkan jumlah bantuan.
+
+---
+**Status Projek:** `STABLE RELEASE (v4.1.0)`  
+**Developer:** `AKULAS`

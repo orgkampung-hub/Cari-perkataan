@@ -1,13 +1,15 @@
-// j_modal.js - Versi Global (Bukan Module)
+// j_modal.js - Versi Global (Auto-Submit & No Classic Popup)
 
 const ModalSystem = {
     init() {
-        console.log("Modal System: Sedia (Global Mode).");
+        console.log("Modal System: Sedia (Auto-Submit Mode).");
     },
 
     show(data) {
         const modal = document.getElementById('game-modal');
         if (!modal) return;
+
+        const savedUsername = localStorage.getItem('username') || "PEMAIN_RAWAK";
 
         const modalContent = modal.querySelector('.modal-content');
         if (modalContent) {
@@ -26,20 +28,19 @@ const ModalSystem = {
                     </div>
                 </div>
 
-                <div style="margin: 15px 0;">
-                    <input type="text" id="player-name" placeholder="MASUKKAN NAMA" 
-                        style="width: 100%; padding: 12px; border: 2px solid #e0f7fa; border-radius: 12px; text-align: center; font-family: 'Fredoka One', cursive; outline: none; box-sizing: border-box;">
+                <div id="status-hantar" style="margin: 10px 0; font-size: 0.8rem; color: #4caf50; font-weight: bold;">
+                    <i class="fas fa-spinner fa-spin"></i> MENYIMPAN SKOR...
                 </div>
                 
-                <button id="btn-hantar-skor" 
-                    style="width:100%; padding:15px; background:#ff9800; color:white; border:none; border-radius:15px; cursor:pointer; font-family: 'Fredoka One', cursive; box-shadow: 0 4px #e65100; margin-bottom: 10px; text-transform: uppercase;">
-                    Hantar Skor & Lihat Ranking
+                <button onclick="window.location.href='highscore.html'" 
+                    style="width:100%; padding:15px; background:#00acc1; color:white; border:none; border-radius:15px; cursor:pointer; font-family: 'Fredoka One', cursive; box-shadow: 0 4px #00838f; margin-bottom: 10px; text-transform: uppercase;">
+                    <i class="fas fa-trophy"></i> LIHAT RANKING
                 </button>
 
                 <div style="display:flex; gap:10px; justify-content:center;">
                     <button class="btn-modal-action" onclick="window.location.reload()" 
                         style="flex:1; padding:12px; background:#4caf50; color:white; border:none; border-radius:15px; cursor:pointer; font-family: 'Fredoka One', cursive; box-shadow: 0 4px #2e7d32; font-size: 0.8rem;">
-                        RETRY
+                        MAIN LAGI
                     </button>
                     <button class="btn-modal-action" onclick="window.location.href='index.html'" 
                         style="flex:1; padding:12px; background:#ff5252; color:white; border:none; border-radius:15px; cursor:pointer; font-family: 'Fredoka One', cursive; box-shadow: 0 4px #c62828; font-size: 0.8rem;">
@@ -47,9 +48,9 @@ const ModalSystem = {
                     </button>
                 </div>
             `;
-
-            const btnHantar = document.getElementById('btn-hantar-skor');
-            btnHantar.onclick = () => this.submitScore(data.score, data.time);
+            
+            // AUTOMATIK HANTAR SKOR SEBAIK SAJA MODAL KELUAR
+            this.autoSubmit(savedUsername, data.score, data.time);
         }
 
         modal.classList.remove('modal-hidden');
@@ -57,19 +58,8 @@ const ModalSystem = {
         modal.style.display = 'flex';
     },
 
-    async submitScore(score, time) {
-        const nameInput = document.getElementById('player-name');
-        const btn = document.getElementById('btn-hantar-skor');
-        const name = nameInput.value.trim();
-
-        if (!name) {
-            alert("Isi nama dulu bos!");
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerText = "SEDANG HANTAR...";
-
+    async autoSubmit(name, score, time) {
+        const statusDiv = document.getElementById('status-hantar');
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyWEF1_2o7TXhuREdwl4dxr9WMqSNfoEWCdQa2FRvlrkMA-fVAMpghhMuf1wnXuSit4/exec';
 
         const formData = new FormData();
@@ -78,13 +68,19 @@ const ModalSystem = {
         formData.append('skor', score);
 
         try {
+            // Hantar secara senyap
             await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
-            window.location.href = 'highscore.html';
+            
+            if (statusDiv) {
+                statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> SKOR BERJAYA DISIMPAN!`;
+                statusDiv.style.color = "#4caf50";
+            }
         } catch (error) {
             console.error("Gagal hantar:", error);
-            alert("Masalah teknikal. Cuba lagi!");
-            btn.disabled = false;
-            btn.innerText = "CUBA HANTAR LAGI";
+            if (statusDiv) {
+                statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> GAGAL SIMPAN KE AWAN`;
+                statusDiv.style.color = "#f44336";
+            }
         }
     },
 

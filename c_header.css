@@ -1,4 +1,4 @@
-/* c_header.css - Susunan Header Final */
+/* c_header.css - Susunan Header Final (Tanpa Kategori) */
 
 #game-header {
     display: flex;
@@ -8,9 +8,16 @@
     background: white;
     border-radius: 0 0 20px 20px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    flex: 0 0 auto; /* Pastikan header tak mengecut */
 }
 
-/* Bahagian Kiri - Butang Home */
+/* Bahagian Kiri - Butang Home & Tutorial */
+.header-left {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
 .btn-home {
     width: 42px;
     height: 42px;
@@ -21,8 +28,10 @@
     font-size: 1.2rem;
     cursor: pointer;
     box-shadow: 0 4px #d32f2f;
-    flex-shrink: 0;
     transition: all 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-home:active {
@@ -30,32 +39,31 @@
     transform: translateY(2px);
 }
 
-/* Bahagian Tengah - Info Box & Kategori */
+/* Bahagian Tengah - Hanya Skor & Masa */
 .header-center {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
     flex: 1;
 }
 
 .info-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around; /* Jarakkan skor dan masa secara seimbang */
     width: 100%;
-    max-width: 150px; /* Lebarkan sikit supaya skor & masa ada jarak */
-    margin-bottom: 5px;
+    max-width: 160px; /* Lebarkan sikit ruang info */
 }
 
-/* Info Box (Skor & Masa) - Tiada Efek Tekan */
+/* Info Box (Skor & Masa) */
 .info-box {
     text-align: center;
-    cursor: default; /* Tukar pointer ke default */
-    user-select: none; /* Elak teks terpilih masa tap laju-laju */
-    -webkit-tap-highlight-color: transparent; /* Buang warna biru highlight pada mobile */
+    cursor: default;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .info-box:active {
-    transform: none !important; /* Pastikan tak bergerak */
+    transform: none !important;
 }
 
 .info-box .label {
@@ -67,28 +75,10 @@
 }
 
 .info-box .value {
-    font-size: 1.2rem;
+    font-size: 1.3rem; /* Besarkan sikit saiz nombor */
     color: #00acc1;
     font-weight: bold;
     font-family: 'Fredoka One', cursive;
-}
-
-/* Kategori diletakkan di bawah */
-.category-display {
-    width: 100%;
-    text-align: center;
-}
-
-.category-display #category-title {
-    font-size: 0.7rem;
-    color: #00838f;
-    background: #e0f7fa;
-    padding: 2px 12px;
-    border-radius: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: bold;
-    display: inline-block;
 }
 
 /* Bahagian Kanan - Butang Hint */
@@ -133,3 +123,5 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+/* Nota: Kategori display lama telah dibuang kerana sudah menggunakan #category-tag dlm HTML */

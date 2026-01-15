@@ -1,4 +1,4 @@
-/* style.css */
+/* style.css - Optimized v4.1.0 */
 * { box-sizing: border-box; }
 
 body {
@@ -10,134 +10,181 @@ body {
     justify-content: center;
     align-items: center;
     font-family: 'Fredoka One', cursive;
+    overflow: hidden; /* Elak body scroll */
 }
 
 .menu-container {
-    width: 90%;
+    width: 92%;
     max-width: 360px;
+    max-height: 98vh; /* Benarkan tinggi ikut skrin tapi jangan lebih */
     background: rgba(255, 255, 255, 0.95);
-    padding: 25px;
+    padding: 15px; /* Kecilkan dari 25px */
     border-radius: 40px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     text-align: center;
     border: 4px solid #fff;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Jika skrin terlampau kecil, baru boleh scroll dalam box */
 }
 
 .game-title {
-    font-size: 2.8rem;
+    font-size: 2.2rem; /* Kecilkan dari 2.8rem */
     color: #00acc1;
-    text-shadow: 3px 3px 0px #e0f7fa, 5px 5px 15px rgba(0,172,193,0.3);
-    margin: 0 0 20px 0;
-    line-height: 1;
+    text-shadow: 2px 2px 0px #e0f7fa;
+    margin: 5px 0 10px 0; /* Kurangkan margin */
+    line-height: 0.9;
 }
 
+/* --- PANEL USER --- */
+.user-panel-container {
+    background: #ffffff;
+    padding: 10px; /* Kecilkan dari 15px */
+    border-radius: 25px;
+    box-shadow: 0 5px 0 #e0f2f1;
+    border: 3px solid #b2ebf2;
+    margin-bottom: 12px; /* Kurangkan dari 20px */
+}
+
+.user-label {
+    font-size: 0.6rem;
+    color: #b0bec5;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.user-name {
+    font-size: 1.1rem;
+    color: #00acc1;
+    margin-bottom: 8px;
+}
+
+.btn-logout {
+    width: 100%;
+    padding: 6px;
+    background: #ff5252;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Fredoka One';
+    font-size: 0.65rem;
+    cursor: pointer;
+    box-shadow: 0 3px 0 #d32f2f;
+}
+
+.btn-login-utama {
+    width: 100%;
+    padding: 12px;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Fredoka One';
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #2e7d32;
+    margin-bottom: 15px;
+}
+
+/* --- GRID KATEGORI --- */
 .grid-kategori {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 10px; /* Kecilkan dari 15px */
+    margin-bottom: 12px;
 }
 
-/* Trik untuk letak butang ke-5 di tengah tanpa ubah saiz */
 .center-row {
     grid-column: span 2;
     display: flex;
     justify-content: center;
+    gap: 10px;
 }
 
 .btn-menu {
-    width: 100%; /* Default untuk grid */
-    max-width: 140px; /* Supaya butang benda tak melampau besar */
+    width: 100%;
+    max-width: 130px;
     border: none;
-    padding: 15px 0;
-    border-radius: 25px;
+    padding: 10px 0; /* Kecilkan dari 15px */
+    border-radius: 20px;
     color: white;
     font-family: 'Fredoka One';
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
-    position: relative;
-    /* Efek Timbul 3D */
-    box-shadow: 0 8px 0 rgba(0,0,0,0.15);
-    transition: all 0.1s;
+    gap: 3px;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.15);
 }
 
-.btn-menu:active {
-    transform: translateY(6px);
-    box-shadow: 0 2px 0 rgba(0,0,0,0.15);
-}
+.btn-menu span { font-size: 0.8rem; }
+.btn-menu i { font-size: 1.2rem; }
 
-.btn-menu span { font-size: 0.9rem; letter-spacing: 1px; }
-.btn-menu i { font-size: 1.4rem; }
-
-/* Warna & Glow */
+/* Warna Kategori Tetap Sama */
 .b-negara { background: #4fc3f7; }
 .b-sukan  { background: #ffb74d; }
 .b-haiwan { background: #81c784; }
 .b-buah   { background: #ff8a65; }
 .b-benda  { background: #ba68c8; }
-
-/* Glow Effect on Hover/Touch */
-.btn-menu:hover {
-    filter: brightness(1.1);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-}
+.b-rawak  { background: #f06292; }
 
 /* Custom Section */
 .custom-section {
     background: #f1f8e9;
-    padding: 15px;
-    border-radius: 30px;
-    margin-bottom: 15px;
-    border: 3px solid #dcedc8;
+    padding: 10px;
+    border-radius: 25px;
+    margin-bottom: 12px;
+    border: 2px solid #dcedc8;
 }
 
 .label {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: #78909c;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     display: block;
 }
 
 #customInput {
     width: 100%;
-    padding: 12px;
-    border-radius: 20px;
+    padding: 8px;
+    border-radius: 15px;
     border: 2px solid #cfd8dc;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-family: 'Fredoka One';
+    font-size: 0.8rem;
     text-align: center;
-    color: #455a64;
-    outline: none;
 }
 
 .btn-play-custom {
     width: 100%;
-    padding: 12px;
-    border-radius: 20px;
-    border: none;
+    padding: 10px;
+    border-radius: 15px;
     background: #7cb342;
     color: white;
     font-family: 'Fredoka One';
-    box-shadow: 0 5px 0 #558b2f;
-    cursor: pointer;
-}
-
-.btn-play-custom:active {
-    transform: translateY(3px);
-    box-shadow: 0 2px 0 #558b2f;
+    box-shadow: 0 4px 0 #558b2f;
+    border: none;
 }
 
 .btn-score {
     width: 100%;
-    padding: 15px;
-    border-radius: 25px;
+    padding: 12px;
+    border-radius: 20px;
     border: none;
     background: #fdd835;
     color: #5d4037;
     font-family: 'Fredoka One';
     box-shadow: 0 5px 0 #fbc02d;
-    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+/* Footer Styling */
+footer p {
+    margin: 5px 0 0 0;
+}
+
+/* Animasi Button Active */
+button:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2) !important;
 }

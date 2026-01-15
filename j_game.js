@@ -1,15 +1,18 @@
-// j_game.js - Controller Utama (Versi Update: Integrated ScoreSystem)
+// j_game.js - Controller Utama (Versi Update: Tag Gantung, Player Info & Dynamic Avatar)
 
 const GameController = {
     score: 0,
     foundCount: 0,
     totalToFind: 0,
     foundWordsList: [],
-    lastFoundTime: 0, // Tambah ni untuk simpan rekod masa sebelum ni
+    lastFoundTime: 0,
 
     async init() {
         this.updateCategoryHeader();
+        this.updateUserDisplay(); // Paparkan nama & avatar user sebaik game load
+        
         try {
+            // 1. Bina Grid dulu (Biar nampak kat background)
             const words = await Generator.init();
             this.totalToFind = words.length; 
             
@@ -18,8 +21,19 @@ const GameController = {
             
             if (typeof Timer !== 'undefined') {
                 Timer.init();
-                this.lastFoundTime = 0; // Reset masa rujukan
+                this.lastFoundTime = 0;
             }
+
+            // 2. SISTEM TUTORIAL
+            if (typeof Tutorial !== 'undefined') {
+                const isShowingTuto = Tutorial.check();
+                if (!isShowingTuto) {
+                    if (typeof Timer !== 'undefined') Timer.start();
+                }
+            } else {
+                if (typeof Timer !== 'undefined') Timer.start();
+            }
+
         } catch (e) { 
             console.error("Gagal init:", e); 
         }
@@ -29,7 +43,26 @@ const GameController = {
         const selectedCat = localStorage.getItem('selectedCategory');
         const headerTitle = document.getElementById('category-title');
         if (headerTitle) {
-            headerTitle.innerText = selectedCat ? selectedCat.toUpperCase() : "CARI PERKATAAN";
+            const catName = selectedCat ? selectedCat.toUpperCase() : "RAWAK";
+            headerTitle.innerHTML = `<i class="fas fa-folder-open" style="margin-right:5px;"></i> ${catName}`;
+        }
+    },
+
+    // KEMASKINI: Papar Nama & Avatar Dinamik
+    updateUserDisplay() {
+        const savedUsername = localStorage.getItem('username') || "PEMAIN";
+        const nameElement = document.getElementById('display-username');
+        const avatarImg = document.getElementById('user-avatar'); 
+
+        if (nameElement) {
+            nameElement.innerText = savedUsername.toUpperCase();
+        }
+
+        // Guna DiceBear API untuk generate avatar berdasarkan nama (seed)
+        if (avatarImg) {
+            const seed = encodeURIComponent(savedUsername.trim());
+            // Style 'fun-emoji' sangat sesuai dengan tema game ceria
+            avatarImg.src = `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${seed}`;
         }
     },
 
@@ -43,29 +76,24 @@ const GameController = {
             wordElement.classList.add('done');
             this.foundWordsList.push(upperWord);
             
-            // --- LOGIK BARU: PANGGIL SCORE SYSTEM ---
             let secondsTaken = 0;
             if (typeof Timer !== 'undefined') {
-                const currentTime = Timer.getTotalSeconds(); // Pastikan Timer ada fungsi ni
+                const currentTime = Timer.getTotalSeconds(); 
                 secondsTaken = currentTime - this.lastFoundTime; 
-                this.lastFoundTime = currentTime; // Simpan untuk perkataan seterusnya
+                this.lastFoundTime = currentTime; 
             }
 
-            // Tanya ScoreSystem berapa markah patut dapat
-            // Kita hantar: (Perkataan, Masa diambil, Guna Hint?, Menyerong?)
-            // Buat masa ni kita set Hint & Diagonal sebagai false/auto
             if (typeof ScoreSystem !== 'undefined') {
                 const pointsReceived = ScoreSystem.calculateWordScore(
                     upperWord, 
                     secondsTaken, 
-                    false, // Nanti boleh ganti dengan HintSystem.checkUsed()
+                    false, 
                     false
                 );
                 this.score += pointsReceived;
             } else {
-                this.score += 100; // Fallback kalau ScoreSystem tak load
+                this.score += 100; 
             }
-            // ------------------------------------------
 
             this.foundCount++;
             this.updateScoreUI();
@@ -96,7 +124,6 @@ const GameController = {
             totalSeconds = Timer.getTotalSeconds();
         }
 
-        // --- TAMBAHAN: BONUS MASA AKHIR ---
         if (typeof ScoreSystem !== 'undefined') {
             const finalBonus = ScoreSystem.calculateFinalBonus(totalSeconds);
             this.score += finalBonus;
