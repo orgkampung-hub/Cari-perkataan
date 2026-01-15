@@ -1,0 +1,44 @@
+/* c_hint.css - Visual Khusus untuk Sistem Hint */
+
+/* Gaya petak grid yang terdedah melalui hint */
+.grid-cell.cell-hint {
+    background-color: #00bcd4 !important; /* Biru Cyan */
+    color: white !important;
+    font-weight: bold;
+    border-radius: 50% !important; /* Bentuk bulat untuk beza dengan jawapan penuh */
+    box-shadow: 0 0 12px rgba(0, 188, 212, 0.6);
+    transition: all 0.4s ease;
+    z-index: 5;
+}
+
+/* Container untuk butang hint (letak dalam game-header atau footer) */
+.hint-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+/* Gaya Butang Hint - Guna tema button kau */
+.btn-hint {
+    padding: 10px 20px;
+    background: #00acc1; /* Warna tema c_game kau */
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px #00838f;
+    transition: all 0.2s active;
+}
+
+.btn-hint:active {
+    box-shadow: 0 2px #00838f;
+    transform: translateY(2px);
+}
+
+.btn-hint:disabled {
+    background: #b2ebf2;
+    box-shadow: none;
+    cursor: not-allowed;
+}

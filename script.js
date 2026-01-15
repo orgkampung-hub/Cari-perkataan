@@ -1,40 +1,38 @@
-/**
- * script.js - v2.6.1
- * Navigasi Menu Utama & Highscore
- */
+// script.js - Pengurus Menu Utama
 
-// Fungsi untuk hantar kategori ke page game.html
-function pickCategoryCross(category) {
-    window.location.href = `game.html?cat=${category}`;
+function pickCategoryCross(kategori) {
+    // Simpan dalam localStorage (WordManager dalam game.html akan baca ni)
+    // Kita tukar jadi HURUF BESAR supaya match dengan JSON
+    localStorage.setItem('selectedCategory', kategori.toUpperCase());
+    
+    // Pergi ke skrin game
+    window.location.href = 'game.html';
 }
 
-// Fungsi untuk navigasi ke halaman Highscore
-function goToHighscore() {
-    window.location.href = 'high.html?action=home';
-}
-
-// Fungsi untuk mod custom
 function startCustomGameCross() {
-    const inputEl = document.getElementById('custom-words-input');
-    if (!inputEl) return;
-    
-    const input = inputEl.value;
-    let words = input.split(/[,]+/).map(w => w.trim().toUpperCase()).filter(w => w.length > 0);
-    
-    if (words.length < 2) { 
-        alert("Masukkan sekurang-kurangnya 2 perkataan!"); 
-        return; 
-    }
-    
-    const gridSize = 12; 
-    const tooLong = words.find(w => w.length > gridSize);
-    
-    if (tooLong) { 
-        alert(`Perkataan "${tooLong}" terlalu panjang (Maksimum 12 huruf)!`); 
-        return; 
+    const input = document.getElementById('customInput').value;
+    if (!input.trim()) {
+        alert("Sila masukkan perkataan!");
+        return;
     }
 
-    // Simpan senarai kata dalam localStorage
-    localStorage.setItem('customWords', JSON.stringify(words.slice(0, 15)));
-    window.location.href = `game.html?cat=CUSTOM`;
+    // Tukar string jadi array, buang space, dan tukar jadi huruf besar
+    const words = input.split(',').map(w => w.trim().toUpperCase()).filter(w => w !== "");
+    
+    if (words.length < 3) {
+        alert("Masukkan sekurang-kurangnya 3 perkataan!");
+        return;
+    }
+
+    localStorage.setItem('selectedCategory', 'CUSTOM');
+    localStorage.setItem('customWords', JSON.stringify(words));
+    
+    window.location.href = 'game.html';
 }
+
+// script.js
+function goToHighscore() {
+    // Redirect ke page highscore
+    window.location.href = "highscore.html"; // pastikan nama file betul
+}
+

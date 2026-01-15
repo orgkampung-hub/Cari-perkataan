@@ -1,38 +1,51 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cari Kata Pro - Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cari Perkataan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="menu-screen" class="screen">
-        <h1 class="game-title">CARI KATA</h1>
+    <div class="menu-container">
+        <h1 class="game-title">CARI<br>PERKATAAN</h1>
         
-        <div class="category-grid">
-            <button class="btn-cat" onclick="pickCategoryCross('HAIWAN')">🐾 HAIWAN</button>
-            <button class="btn-cat" onclick="pickCategoryCross('BUAH')">🍎 BUAH</button>
-            <button class="btn-cat" onclick="pickCategoryCross('NEGARA')">🌍 NEGARA</button>
-            <button class="btn-cat" onclick="pickCategoryCross('SUKAN')">⚽ SUKAN</button>
-            <button class="btn-cat" onclick="pickCategoryCross('BENDA')">📦 BENDA</button>
-            <button class="btn-highscore" onclick="goToHighscore()">🏆 SKOR</button>
-        </div>
-        
-        <div class="info-box">
-            <p>Nak pilih perkataan? Tap huruf mula dan huruf akhir je!</p>
+        <div class="grid-kategori">
+            <button onclick="pickCategoryCross('negara')" class="btn-menu b-negara">
+                <i class="fas fa-flag"></i><span>Negara</span>
+            </button>
+            <button onclick="pickCategoryCross('sukan')" class="btn-menu b-sukan">
+                <i class="fas fa-football-ball"></i><span>Sukan</span>
+            </button>
+            
+            <button onclick="pickCategoryCross('haiwan')" class="btn-menu b-haiwan">
+                <i class="fas fa-paw"></i><span>Haiwan</span>
+            </button>
+            <button onclick="pickCategoryCross('buah')" class="btn-menu b-buah">
+                <i class="fas fa-apple-alt"></i><span>Buah</span>
+            </button>
+
+            <div class="center-row">
+                <button onclick="pickCategoryCross('benda')" class="btn-menu b-benda">
+                    <i class="fas fa-couch"></i><span>Benda</span>
+                </button>
+            </div>
         </div>
 
         <div class="custom-section">
-            <p>Atau buat senarai sendiri:</p>
-            <textarea id="custom-words-input" placeholder="Taip perkataan, asingkan dengan koma..."></textarea>
-            <button class="btn-custom" onclick="startCustomGameCross()">MULA MOD CUSTOM</button>
+            <p class="label">BINA SENDIRI</p>
+            <input type="text" id="customInput" placeholder="tapi perkataan,asingkan dgn koma,">
+            <button onclick="startCustomGameCross()" class="btn-play-custom">
+                <i class="fas fa-play"></i> MAIN CUSTOM
+            </button>
         </div>
 
-        <p class="version-text">
-            akulas * v3.0.1
-        </p>
+        <button onclick="goToHighscore()" class="btn-score">
+            <i class="fas fa-trophy"></i> LEADERBOARD
+        </button>
     </div>
 
     <script src="script.js"></script>

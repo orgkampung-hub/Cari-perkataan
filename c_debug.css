@@ -1,0 +1,78 @@
+/* c_debug.css - Dashboard Hacker Style */
+
+.debug-btn-container {
+    position: fixed !important;
+    top: 75px !important;       /* Diturunkan supaya berada di bawah skor */
+    left: 50% !important;      /* Tetap di tengah */
+    transform: translateX(-50%) !important; /* Center kan betul-betul */
+    display: none;             /* Biar JS yang uruskan show/hide */
+    flex-direction: column;
+    gap: 8px;
+    z-index: 999999 !important;
+    width: 180px;              /* Lebarkan sikit supaya kemas di atas */
+}
+
+#debug-info-panel {
+    background: rgba(0, 20, 0, 0.9);
+    border: 1px solid #0f0;
+    color: #0f0;
+    padding: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+    pointer-events: none;
+    margin-bottom: 5px;
+}
+
+.btn-debug {
+    padding: 10px;
+    background: #111 !important;
+    color: #0f0 !important;
+    border: 1px solid #0f0 !important;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    width: 100%;
+}
+
+.btn-debug:hover { background: #0f0 !important; color: #000 !important; }
+
+/* --- CLASS BARU UNTUK VISUAL HIGHLIGHT --- */
+.grid-cell.debug-ans {
+    outline: 2px solid #0f0 !important;
+    background: rgba(0, 255, 0, 0.2) !important;
+    z-index: 10;
+}
+
+.grid-cell.debug-crs {
+    background: #ff9100 !important;
+    color: white !important;
+    border-radius: 50% !important;
+    z-index: 11;
+}
+
+#debug-toast {
+    visibility: hidden;
+    min-width: 180px;
+    background: #111;
+    color: #0f0;
+    text-align: center;
+    border-radius: 4px;
+    padding: 12px;
+    position: fixed;
+    z-index: 1000000;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    font-family: monospace;
+    border: 1px solid #0f0;
+}
+
+#debug-toast.show { visibility: visible; animation: fadein_debug 0.5s, fadeout_debug 0.5s 1.5s; }
+@keyframes fadein_debug { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+@keyframes fadeout_debug { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }

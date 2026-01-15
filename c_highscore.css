@@ -1,0 +1,67 @@
+/* c_highscore.css - Clean & Fast Version */
+:root {
+  --gold: #FFD700; --silver: #C0C0C0; --bronze: #CD7F32;
+  --primary: #FF6F00; --secondary: #FFB347;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #FFECD2 0%, #FCB69F 100%);
+  display: flex; justify-content: center; align-items: center;
+  min-height: 100vh; margin: 0;
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px 20px; border-radius: 30px;
+  border: 4px solid #fff; width: 95%; max-width: 500px;
+  text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+h1 {
+  font-family: 'Luckiest Guy', cursive;
+  font-size: 2.5rem; color: var(--primary);
+  margin-bottom: 25px;
+}
+
+#highscore-list {
+  display: flex; flex-direction: column; gap: 10px;
+  max-height: 450px; overflow-y: auto; padding: 5px;
+}
+
+.score-card {
+  display: flex; align-items: center;
+  background: #fff; border-radius: 15px;
+  padding: 12px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  border-left: 6px solid #f1f2f6;
+  opacity: 1 !important; /* Paksa nampak terus */
+}
+
+.col-rank { width: 40px; display: flex; justify-content: center; font-family: 'Luckiest Guy', cursive; font-size: 1.2rem; color: #ccc; }
+.col-info { flex: 1; text-align: left; padding-left: 10px; }
+.player-name { font-weight: 800; color: #333; font-size: 1rem; text-transform: uppercase; }
+
+.col-stats { display: flex; gap: 8px; }
+.stat-box {
+  background: #fff8f0; padding: 5px 8px; border-radius: 10px;
+  display: flex; flex-direction: column; min-width: 60px;
+  border: 1px solid #ffe0b2;
+}
+.stat-label { font-size: 0.55rem; font-weight: 800; color: #ffa726; }
+.stat-value { font-family: 'Luckiest Guy', cursive; font-size: 0.9rem; color: #e65100; }
+
+/* Ranks */
+.gold-rank { border-left-color: var(--gold); background: #fffef2; }
+.medal { font-size: 1.4rem; }
+.gold { color: var(--gold); }
+.silver { color: var(--silver); }
+.bronze { color: var(--bronze); }
+
+#back-btn {
+  margin-top: 25px; width: 100%; padding: 15px;
+  font-family: 'Luckiest Guy', cursive; font-size: 1.2rem;
+  color: #fff; background: #ff8c42; border: none;
+  border-radius: 15px; box-shadow: 0 5px 0 #d97d31;
+  cursor: pointer;
+}
+#back-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #d97d31; }

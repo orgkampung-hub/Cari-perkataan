@@ -3,83 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cari Kata Pro</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="game.css">
-    <link rel="stylesheet" href="debug.css"> 
+    <title>Cari Perkataan - Arena</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="c_game.css">
+    <link rel="stylesheet" href="c_header.css">
+    <link rel="stylesheet" href="c_grid.css">
+    <link rel="stylesheet" href="c_modal.css">
+    <link rel="stylesheet" href="c_debug.css"> 
+    <link rel="stylesheet" href="c_hint.css">
 </head>
-<body>
+<body class="game-body">
 
-    <div id="debugPanel">
-        <div id="dbgWords">WDS: 0</div>
-        <div id="dbgCross">CRS: 0</div>
-        <div id="dbgRetry">TRY: 0</div>
-        <div id="dbgDup">DUP: 0</div> 
-        <button class="btn-skip" onclick="skipLevel()">SKIP</button>
-    </div>
+    <div id="game-container">
+        <header id="game-header">
+            <div class="header-left">
+                <button onclick="window.location.href='index.html'" class="btn-home">
+                    <i class="fas fa-home"></i>
+                </button>
+            </div>
 
-    <div id="loading-screen" class="screen">
-        <div class="loader"></div>
-        <p>Menyusun grid...</p>
-    </div>
-
-    <div id="toast-msg">Mata tidak cukup!</div>
-
-    <div id="game-screen" class="screen hidden">
-        <div class="side-panel">
-            <div class="game-header">
-                <div class="top-bar">
-                    <button class="btn-small" onclick="window.location.href='index.html'">🏠</button>
-                    
-                    <div class="stats-bar">
-                        <span id="score-display" onclick="handleScoreClick()">0</span>
-                        <div id="current-cat-display">KATEGORI</div>
+            <div class="header-center">
+                <div class="info-wrapper">
+                    <div class="info-box">
+                        <span class="label">SKOR</span>
+                        <span id="score" class="value">0</span>
                     </div>
-
-                    <button id="hint-btn" class="btn-hint" onclick="useHint()">
-                        <span>💡</span>
-                        <span id="hint-cost-label">0</span>
-                    </button>
+                    <div class="info-box">
+                        <span class="label">MASA</span>
+                        <span id="timer" class="value">00:00</span>
+                    </div>
                 </div>
-                
-                <div class="timer-container">
-                    <span class="timer-icon">⏱️</span>
-                    <span id="timer-label">00:00</span>
+                <div class="category-display">
+                    <span id="category-title">MEMUATKAN...</span>
                 </div>
             </div>
-            
-            <ul id="word-list"></ul>
-        </div>
 
-        <div id="grid-container"></div>
+            <div class="header-right">
+                <button class="btn-hint-top" onclick="HintSystem.useHint()">
+                    <i class="fas fa-lightbulb"></i>
+                    <span id="hint-count">3</span>
+                </button>
+            </div>
+        </header>
+
+        <section id="word-list-area">
+            <div id="word-list" class="word-list-items"></div>
+        </section>
+
+        <main id="grid-container"></main>
     </div>
 
-    <div id="custom-modal">
+    <div id="game-modal">
         <div class="modal-content">
-            <div class="modal-icon">🌟</div>
-            <h2>GRID SELESAI!</h2>
-            
-            <div id="modal-stats-display">
-                🏆 SKOR: --
             </div>
-
-            <div style="margin-bottom: 20px;">
-                <input type="text" id="player-name-input" placeholder="NAMA ANDA" maxlength="15" style="display:none;">
-            </div>
-            
-            <div class="modal-buttons">
-                <button class="btn-next" onclick="teruskanGrid()">TERUSKAN KE GRID #</button>
-                
-                <button class="btn-menu" onclick="tunjukSimpanSkor()">TAMAT & SIMPAN SKOR</button>
-                
-                <button class="btn-menu" style="background:#757575 !important; box-shadow:0 4px #424242; font-size: 0.8rem;" onclick="goToMenu()">KELUAR TANPA SIMPAN</button>
-            </div>
-        </div>
     </div>
 
-    <script src="sound.js"></script>
-    <script src="pilihword.js"></script>
-    <script src="game.js"></script>
-    <script src="debug.js"></script>
+    <script src="j_sound.js"></script>
+    <script src="j_generator.js"></script> 
+    <script src="j_grid.js"></script>      
+    <script src="j_interaction.js"></script> 
+    <script src="j_timer.js"></script>
+    <script src="j_score.js"></script>
+    <script src="j_modal.js"></script> 
+    <script src="j_debug.js"></script> 
+    <script src="j_hint.js"></script> 
+    <script src="j_game.js"></script>
 </body>
 </html>

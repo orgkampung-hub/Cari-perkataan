@@ -1,147 +1,143 @@
-/* =============================================================
-   UNIVERSAL RESET
-   ============================================================= */
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+/* style.css */
+* { box-sizing: border-box; }
 
-body { 
-    /* Penambahan latar belakang */
-    background-image: url('bgmenu.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    
-    color: #333; 
-    overflow: hidden; 
-    touch-action: none; 
-    position: relative; 
-    min-height: 100vh;
-}
-
-/* Penyelarasan Screen: Pastikan tak ganggu z-index Debug Panel */
-.screen {
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100vw; 
+body {
+    background: #f0f9ff;
+    background: radial-gradient(circle, #ffffff 0%, #b2ebf2 100%);
+    margin: 0;
     height: 100vh;
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
+    display: flex;
     justify-content: center;
-    padding: 15px; 
-    background: rgba(255, 255, 255, 0.8); /* Ditingkatkan sedikit kepekatan untuk bacaan menu */
-    z-index: 2000; /* Diletakkan tinggi supaya sentiasa di atas grid masa loading */
-    transition: opacity 0.3s ease;
+    align-items: center;
+    font-family: 'Fredoka One', cursive;
 }
 
-/* Class kritikal untuk JS */
-.hidden { display: none !important; pointer-events: none !important; }
-
-h1 { margin-bottom: 20px; color: #1a237e; font-size: 2.2rem; font-weight: 800; }
-
-.category-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 12px; 
-    width: 100%; 
-    max-width: 400px; 
-}
-
-/* =============================================================
-   BUTTONS GENERAL
-   ============================================================= */
-button { 
-    padding: 15px; 
-    border: none; 
-    border-radius: 12px; 
-    background: #3f51b5; 
-    color: white; 
-    font-weight: bold; 
-    cursor: pointer; 
-    box-shadow: 0 4px #283593; 
-    transition: 0.2s; 
-}
-
-button:active { 
-    transform: translateY(2px); 
-    box-shadow: 0 2px #283593; 
-}
-
-/* KHAS: Butang Highscore (Lebar Penuh & Warna Emas) */
-.btn-highscore {
-    grid-column: span 2; /* Panjang penuh dalam grid */
-    background: #f1c40f !important;
-    color: #000 !important;
-    box-shadow: 0 4px #d4ac0d !important;
-    margin-top: 5px;
-    font-size: 1.1rem;
-}
-
-.btn-highscore:active {
-    box-shadow: 0 2px #d4ac0d !important;
-}
-
-/* =============================================================
-   CUSTOM SECTION
-   ============================================================= */
-.custom-section { 
-    margin-top: 25px; 
-    width: 100%; 
-    max-width: 400px; 
-    text-align: center; 
-    border-top: 1px solid #ddd; 
-    padding-top: 20px; 
-}
-
-.custom-section p { 
-    font-size: 0.9rem; 
-    font-weight: bold; 
-    margin-bottom: 8px; 
-    color: #555; 
-}
-
-textarea { 
-    width: 100%; 
-    height: 60px; 
-    padding: 10px; 
-    border-radius: 8px; 
-    border: 2px solid #3f51b5; 
-    margin-bottom: 10px; 
-    resize: none; 
-    font-size: 1rem; 
-}
-
-.btn-custom { 
-    background: #2e7d32 !important; 
-    box-shadow: 0 4px #1b5e20 !important; 
-    width: 100%; 
-}
-
-/* Gaya untuk teks versi */
-.version-text {
-    font-size: 0.75rem;
-    color: #1a237e !important;
-    font-weight: bold;
-    margin-top: 10px; 
+.menu-container {
+    width: 90%;
+    max-width: 360px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    border-radius: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     text-align: center;
+    border: 4px solid #fff;
+}
+
+.game-title {
+    font-size: 2.8rem;
+    color: #00acc1;
+    text-shadow: 3px 3px 0px #e0f7fa, 5px 5px 15px rgba(0,172,193,0.3);
+    margin: 0 0 20px 0;
+    line-height: 1;
+}
+
+.grid-kategori {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Trik untuk letak butang ke-5 di tengah tanpa ubah saiz */
+.center-row {
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-menu {
+    width: 100%; /* Default untuk grid */
+    max-width: 140px; /* Supaya butang benda tak melampau besar */
+    border: none;
+    padding: 15px 0;
+    border-radius: 25px;
+    color: white;
+    font-family: 'Fredoka One';
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+    /* Efek Timbul 3D */
+    box-shadow: 0 8px 0 rgba(0,0,0,0.15);
+    transition: all 0.1s;
+}
+
+.btn-menu:active {
+    transform: translateY(6px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+}
+
+.btn-menu span { font-size: 0.9rem; letter-spacing: 1px; }
+.btn-menu i { font-size: 1.4rem; }
+
+/* Warna & Glow */
+.b-negara { background: #4fc3f7; }
+.b-sukan  { background: #ffb74d; }
+.b-haiwan { background: #81c784; }
+.b-buah   { background: #ff8a65; }
+.b-benda  { background: #ba68c8; }
+
+/* Glow Effect on Hover/Touch */
+.btn-menu:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+/* Custom Section */
+.custom-section {
+    background: #f1f8e9;
+    padding: 15px;
+    border-radius: 30px;
+    margin-bottom: 15px;
+    border: 3px solid #dcedc8;
+}
+
+.label {
+    font-size: 0.8rem;
+    color: #78909c;
+    margin-bottom: 10px;
+    display: block;
+}
+
+#customInput {
     width: 100%;
+    padding: 12px;
+    border-radius: 20px;
+    border: 2px solid #cfd8dc;
+    margin-bottom: 10px;
+    font-family: 'Fredoka One';
+    text-align: center;
+    color: #455a64;
+    outline: none;
 }
 
-/* =============================================================
-   LOADER
-   ============================================================= */
-.loader { 
-    border: 4px solid #f3f3f3; 
-    border-top: 4px solid #3f51b5; 
-    border-radius: 50%; 
-    width: 40px; 
-    height: 40px; 
-    animation: spin 1s linear infinite; 
-    margin: auto; 
+.btn-play-custom {
+    width: 100%;
+    padding: 12px;
+    border-radius: 20px;
+    border: none;
+    background: #7cb342;
+    color: white;
+    font-family: 'Fredoka One';
+    box-shadow: 0 5px 0 #558b2f;
+    cursor: pointer;
 }
 
-@keyframes spin { 
-    0% { transform: rotate(0deg); } 
-    100% { transform: rotate(360deg); } 
+.btn-play-custom:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #558b2f;
+}
+
+.btn-score {
+    width: 100%;
+    padding: 15px;
+    border-radius: 25px;
+    border: none;
+    background: #fdd835;
+    color: #5d4037;
+    font-family: 'Fredoka One';
+    box-shadow: 0 5px 0 #fbc02d;
+    cursor: pointer;
 }

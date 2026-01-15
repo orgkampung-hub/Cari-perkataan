@@ -1,0 +1,74 @@
+/* c_modal.css - Sistem Paparan Modal Syabas */
+
+/* Container utama modal */
+#game-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Latar belakang hitam pudar */
+    display: none; /* Disorokkan secara default */
+    justify-content: center;
+    align-items: center;
+    z-index: 99999; /* Pastikan duduk paling atas sekali */
+    backdrop-filter: blur(8px); /* Efek kabur di belakang modal */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Class untuk panggil modal muncul */
+#game-modal.modal-show {
+    display: flex !important;
+}
+
+/* Kotak kandungan modal */
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 340px;
+    padding: 30px 20px;
+    border-radius: 30px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    
+    /* Animasi muncul dari bawah ke tengah */
+    animation: modalBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes modalBounce {
+    0% { transform: scale(0.7) translateY(100px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Gaya Butang dalam Modal */
+.btn-modal-action {
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.btn-modal-action:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px #222 !important;
+}
+
+/* Gaya tambahan untuk teks dalam modal (jika tak set inline) */
+.modal-content h2 {
+    font-family: 'Fredoka One', cursive;
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem;
+    margin: 5px 0;
+}
+
+/* Sembunyikan modal jika ada class modal-hidden */
+.modal-hidden {
+    display: none !important;
+}

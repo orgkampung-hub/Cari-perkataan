@@ -1,0 +1,135 @@
+/* c_header.css - Susunan Header Final */
+
+#game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* Bahagian Kiri - Butang Home */
+.btn-home {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: none;
+    background: #ff5252;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px #d32f2f;
+    flex-shrink: 0;
+    transition: all 0.1s;
+}
+
+.btn-home:active {
+    box-shadow: 0 2px #d32f2f;
+    transform: translateY(2px);
+}
+
+/* Bahagian Tengah - Info Box & Kategori */
+.header-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.info-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 150px; /* Lebarkan sikit supaya skor & masa ada jarak */
+    margin-bottom: 5px;
+}
+
+/* Info Box (Skor & Masa) - Tiada Efek Tekan */
+.info-box {
+    text-align: center;
+    cursor: default; /* Tukar pointer ke default */
+    user-select: none; /* Elak teks terpilih masa tap laju-laju */
+    -webkit-tap-highlight-color: transparent; /* Buang warna biru highlight pada mobile */
+}
+
+.info-box:active {
+    transform: none !important; /* Pastikan tak bergerak */
+}
+
+.info-box .label {
+    display: block;
+    font-size: 0.65rem;
+    color: #888;
+    font-family: 'Fredoka One', cursive;
+    margin-bottom: 2px;
+}
+
+.info-box .value {
+    font-size: 1.2rem;
+    color: #00acc1;
+    font-weight: bold;
+    font-family: 'Fredoka One', cursive;
+}
+
+/* Kategori diletakkan di bawah */
+.category-display {
+    width: 100%;
+    text-align: center;
+}
+
+.category-display #category-title {
+    font-size: 0.7rem;
+    color: #00838f;
+    background: #e0f7fa;
+    padding: 2px 12px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+/* Bahagian Kanan - Butang Hint */
+.header-right {
+    flex-shrink: 0;
+}
+
+.btn-hint-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: #ffc107;
+    border: none;
+    border-radius: 12px;
+    color: #5d4037;
+    cursor: pointer;
+    box-shadow: 0 4px #ffa000;
+    transition: all 0.1s;
+}
+
+.btn-hint-top:active {
+    box-shadow: 0 2px #ffa000;
+    transform: translateY(2px);
+}
+
+.btn-hint-top i {
+    font-size: 1rem;
+}
+
+.btn-hint-top span {
+    font-size: 0.75rem;
+    font-weight: bold;
+    font-family: 'Fredoka One', cursive;
+}
+
+.btn-hint-top:disabled {
+    background: #ddd;
+    box-shadow: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
