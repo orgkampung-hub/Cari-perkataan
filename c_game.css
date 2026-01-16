@@ -1,4 +1,4 @@
-/* c_game.css - Penyelarasan Ruang Skrin (Final Optimized v4.2) */
+/* c_game.css - Versi Stabil (Fix Strike-through & Wordlist) */
 
 html, body {
     height: 100%;
@@ -25,7 +25,7 @@ html, body {
     z-index: 100;
 }
 
-/* PLAYER BAR (NAMA + SCORE) */
+/* PLAYER BAR */
 #player-bar {
     flex: 0 0 auto;
     display: flex; 
@@ -39,23 +39,6 @@ html, body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* Penyelarasan Score dlm Bar */
-#score {
-    font-size: 1.8rem; 
-    color: #f57f17;
-    text-shadow: 1px 1px 0px #fff;
-    line-height: 1;
-}
-
-/* TIMER TENGAH - WARNA DAH TUKAR SUPAYA NAMPAK JELAS */
-#timer {
-    font-size: 2.5rem; /* Besarkan sikit lagi */
-    color: #00838f;    /* Teal Gelap: Kontras dengan background biru cerah */
-    text-shadow: 2px 2px 0px #ffffff; /* Outline putih supaya tajam */
-    line-height: 1;
-    font-family: 'Fredoka One', cursive;
-}
-
 /* WORD LIST AREA */
 #word-list-area {
     flex: 0 0 auto; 
@@ -64,7 +47,7 @@ html, body {
     border-radius: 15px; 
     margin-top: 15px; 
     margin-bottom: 5px; 
-    padding: 18px 8px 10px 8px; 
+    padding: 20px 8px 10px 8px; /* Padding atas dikembalikan */
     border: 2px solid #00acc1; 
     overflow: visible !important; 
 }
@@ -76,6 +59,7 @@ html, body {
     gap: 6px; 
 }
 
+/* GAYA ASAL WORD ITEM */
 .word-item {
     font-size: 0.75rem; 
     padding: 5px 12px; 
@@ -84,20 +68,24 @@ html, body {
     color: #00acc1;
     border: 1px solid #b2ebf2; 
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
 }
 
-.word-item.done {
+/* FIX: SELEKTOR PADU UNTUK PERKATAAN DITEMUI */
+#word-list .word-item.done {
     background: #4caf50 !important; 
     color: white !important; 
-    text-decoration: line-through;
-    opacity: 0.8;
+    text-decoration: line-through !important; /* Paksa potong */
+    border-color: #388e3c !important;
+    opacity: 0.7;
+    transform: scale(0.95);
 }
 
 /* GRID AREA */
 #grid-container {
     flex: 1; 
     display: flex;
-    align-items: flex-start; 
+    align-items: flex-start; /* Kembalikan ke flex-start supaya tak lari */
     justify-content: center;
     padding-top: 10px;
     padding-bottom: 15px; 
@@ -110,7 +98,7 @@ html, body {
     touch-action: none;
 }
 
-/* --- ANIMASI --- */
+/* ANIMASI CELL */
 .cell-found {
     background-color: #4caf50 !important;
     color: #ffffff !important;

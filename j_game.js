@@ -1,4 +1,4 @@
-// j_game.js - Controller Utama (Versi Update: Tag Gantung, Player Info & Dynamic Avatar)
+// j_game.js - Controller Utama (v4.4.4 - Clean Version)
 
 const GameController = {
     score: 0,
@@ -9,14 +9,11 @@ const GameController = {
 
     async init() {
         this.updateCategoryHeader();
-        this.updateUserDisplay(); // Paparkan nama & avatar user sebaik game load
+        this.updateUserDisplay(); 
         
         try {
-            // 1. Bina Grid dulu (Biar nampak kat background)
             const words = await Generator.init();
             this.totalToFind = words.length; 
-            
-            console.log(`Game Ready: Mencari ${this.totalToFind} perkataan.`);
             this.updateScoreUI();
             
             if (typeof Timer !== 'undefined') {
@@ -24,7 +21,6 @@ const GameController = {
                 this.lastFoundTime = 0;
             }
 
-            // 2. SISTEM TUTORIAL
             if (typeof Tutorial !== 'undefined') {
                 const isShowingTuto = Tutorial.check();
                 if (!isShowingTuto) {
@@ -35,7 +31,7 @@ const GameController = {
             }
 
         } catch (e) { 
-            console.error("Gagal init:", e); 
+            console.error("Gagal init game:", e); 
         }
     },
 
@@ -48,7 +44,6 @@ const GameController = {
         }
     },
 
-    // KEMASKINI: Papar Nama & Avatar Dinamik
     updateUserDisplay() {
         const savedUsername = localStorage.getItem('username') || "PEMAIN";
         const nameElement = document.getElementById('display-username');
@@ -58,17 +53,14 @@ const GameController = {
             nameElement.innerText = savedUsername.toUpperCase();
         }
 
-        // Guna DiceBear API untuk generate avatar berdasarkan nama (seed)
         if (avatarImg) {
             const seed = encodeURIComponent(savedUsername.trim());
-            // Style 'fun-emoji' sangat sesuai dengan tema game ceria
             avatarImg.src = `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${seed}`;
         }
     },
 
     markWordFound(word) {
         const upperWord = word.toUpperCase();
-        
         if (this.foundWordsList.includes(upperWord)) return;
         
         const wordElement = document.getElementById(`list-${upperWord}`);
@@ -84,22 +76,16 @@ const GameController = {
             }
 
             if (typeof ScoreSystem !== 'undefined') {
-                const pointsReceived = ScoreSystem.calculateWordScore(
-                    upperWord, 
-                    secondsTaken, 
-                    false, 
-                    false
-                );
+                const pointsReceived = ScoreSystem.calculateWordScore(upperWord, secondsTaken, false, false);
                 this.score += pointsReceived;
             } else {
                 this.score += 100; 
             }
 
-            this.foundCount++;
             this.updateScoreUI();
+            this.foundCount++;
 
             if (this.foundCount === this.totalToFind && this.totalToFind > 0) {
-                // Tambah delay sikit kat sini (dari 500 ke 1200) supaya animasi grid settle
                 setTimeout(() => this.victory(), 1200);
             }
         }
@@ -110,38 +96,33 @@ const GameController = {
         if (scoreDisplay) scoreDisplay.innerText = this.score;
     },
 
+    // FUNGSI hantarKeGoogle DIBUANG UNTUK ELAK PERCANGGAHAN DENGAN MODAL
+
     victory() {
         console.log("Kemenangan dikesan!");
         
-        // Bungkus semua logik victory dlm timeout supaya bertenang sikit
-        setTimeout(() => {
-            if (typeof SoundEngine !== 'undefined') {
-                SoundEngine.playVictory();
-            }
-            
-            let timeString = "00:00";
-            let totalSeconds = 0;
-            if (typeof Timer !== 'undefined') {
-                Timer.stop();
-                timeString = Timer.getTimeFormatted();
-                totalSeconds = Timer.getTotalSeconds();
-            }
+        if (typeof Timer !== 'undefined') Timer.stop();
+        
+        const timeString = typeof Timer !== 'undefined' ? Timer.getTimeFormatted() : "00:00";
+        const totalSeconds = typeof Timer !== 'undefined' ? Timer.getTotalSeconds() : 0;
 
-            if (typeof ScoreSystem !== 'undefined') {
-                const finalBonus = ScoreSystem.calculateFinalBonus(totalSeconds);
-                this.score += finalBonus;
-                this.updateScoreUI();
-            }
+        if (typeof ScoreSystem !== 'undefined') {
+            const finalBonus = ScoreSystem.calculateFinalBonus(totalSeconds);
+            this.score += finalBonus;
+            this.updateScoreUI();
+        }
 
-            if (typeof ModalSystem !== 'undefined') {
-                ModalSystem.show({
-                    title: "TAHNIAH!",
-                    message: `Anda menjumpai semua ${this.totalToFind} perkataan!`,
-                    time: timeString,
-                    score: this.score
-                });
-            }
-        }, 300); // Extra safety delay
+        if (typeof SoundEngine !== 'undefined') SoundEngine.playVictory();
+
+        // SERAH TUGAS HANTAR DATA PADA MODAL SAHAJA
+        if (typeof ModalSystem !== 'undefined') {
+            ModalSystem.show({
+                title: "TAHNIAH!",
+                message: `Anda menjumpai semua ${this.totalToFind} perkataan!`,
+                time: timeString,
+                score: this.score
+            });
+        }
     }
 };
 

@@ -1,6 +1,6 @@
 /**
- * j_modal.js - Versi Global (Auto-Submit & Synced with Column A-D)
- * Update: Menggunakan URL Script Baru (qbT) & Susunan nama, masa, skor, level.
+ * j_modal.js - Versi Global (Auto-Submit & Synced with Column A-E)
+ * Update: Menambah penghantaran Avatar URL ke Column E.
  */
 
 const ModalSystem = {
@@ -77,25 +77,27 @@ const ModalSystem = {
 
     /**
      * Hantar data ke Google Sheets mengikut susunan:
-     * A:nama, B:masa, C:skor, D:level
+     * A:nama, B:masa, C:skor, D:level, E:avatar
      */
     async autoSubmit(name, score, time) {
         const statusDiv = document.getElementById('status-hantar');
         
-        // URL Web App Google Script yang paling baru kau bagi tadi
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyLri7drzKjrP23M7Uwy35GLTd4pFE15_HKCUtCiEDxMrll2uYI7U4E2vU-vd5vgqbT/exec';
 
-        // Ambil level semasa dari localStorage (auto lowercase)
+        // Ambil level semasa dari localStorage
         const currentLevel = (localStorage.getItem('selectedLevel') || 'medium').toLowerCase();
 
+        // Jana URL Avatar berdasarkan nama (DiceBear)
+        const avatarUrl = `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${encodeURIComponent(name.trim())}`;
+
         const formData = new FormData();
-        formData.append('nama', name);   // Masuk Column A
-        formData.append('masa', time);   // Masuk Column B
-        formData.append('skor', score);  // Masuk Column C
-        formData.append('level', currentLevel); // Masuk Column D
+        formData.append('nama', name);      // Column A
+        formData.append('masa', time);      // Column B
+        formData.append('skor', score);     // Column C
+        formData.append('level', currentLevel); // Column D
+        formData.append('avatar', avatarUrl);   // Column E (BARU)
 
         try {
-            // Gunakan fetch dengan mode no-cors
             await fetch(scriptURL, { 
                 method: 'POST', 
                 body: formData, 
@@ -126,5 +128,4 @@ const ModalSystem = {
     }
 };
 
-// Inisialisasi bila file diload
 document.addEventListener('DOMContentLoaded', () => ModalSystem.init());
