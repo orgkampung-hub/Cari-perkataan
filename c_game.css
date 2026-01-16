@@ -1,4 +1,4 @@
-/* c_game.css - Penyelarasan Ruang Skrin (Final Optimized) */
+/* c_game.css - Penyelarasan Ruang Skrin (Final Optimized v4.2) */
 
 html, body {
     height: 100%;
@@ -22,40 +22,51 @@ html, body {
 #game-header {
     flex: 0 0 auto;
     margin-bottom: 5px;
+    z-index: 100;
 }
 
-/* PLAYER BAR (NAMA USER) */
+/* PLAYER BAR (NAMA + SCORE) */
 #player-bar {
     flex: 0 0 auto;
     display: flex; 
     align-items: center; 
-    justify-content: center; 
-    background: rgba(255,255,255,0.8); 
-    margin: 5px 10px 15px 10px; /* Lebarkan margin bawah untuk ruang tag kategori */
-    padding: 6px 15px; 
+    justify-content: space-between; 
+    background: rgba(255,255,255,0.9); 
+    margin: 5px 10px 10px 10px; 
+    padding: 8px 18px; 
     border-radius: 50px; 
     border: 2px solid #00acc1; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* WORD LIST AREA - DENGAN FIX TEKS KATEGORI SEPARUH */
+/* Penyelarasan Score dlm Bar */
+#score {
+    font-size: 1.8rem; 
+    color: #f57f17;
+    text-shadow: 1px 1px 0px #fff;
+    line-height: 1;
+}
+
+/* TIMER TENGAH - WARNA DAH TUKAR SUPAYA NAMPAK JELAS */
+#timer {
+    font-size: 2.5rem; /* Besarkan sikit lagi */
+    color: #00838f;    /* Teal Gelap: Kontras dengan background biru cerah */
+    text-shadow: 2px 2px 0px #ffffff; /* Outline putih supaya tajam */
+    line-height: 1;
+    font-family: 'Fredoka One', cursive;
+}
+
+/* WORD LIST AREA */
 #word-list-area {
     flex: 0 0 auto; 
     position: relative; 
     background: rgba(255, 255, 255, 0.8);
     border-radius: 15px; 
-    margin-top: 10px; /* Ruang untuk tag gantung supaya tak kena potong */
-    margin-bottom: 10px; 
-    padding: 15px 8px 8px 8px; /* Tambah padding atas lebih sikit */
+    margin-top: 15px; 
+    margin-bottom: 5px; 
+    padding: 18px 8px 10px 8px; 
     border: 2px solid #00acc1; 
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
-    overflow: visible !important; /* PENTING: Supaya tag gantung nampak penuh */
-}
-
-/* Gaya Tag Kategori (Overriding Inline Styles if necessary) */
-#category-tag {
-    white-space: nowrap;
-    z-index: 100;
+    overflow: visible !important; 
 }
 
 #word-list {
@@ -66,8 +77,8 @@ html, body {
 }
 
 .word-item {
-    font-size: 0.7rem; 
-    padding: 4px 10px; 
+    font-size: 0.75rem; 
+    padding: 5px 12px; 
     background: white;
     border-radius: 15px;
     color: #00acc1;
@@ -77,27 +88,26 @@ html, body {
 
 .word-item.done {
     background: #4caf50 !important; 
-    color: rgba(255, 255, 255, 0.9) !important; 
-    text-decoration: line-through !important;
-    text-decoration-color: #ff5252 !important; 
+    color: white !important; 
+    text-decoration: line-through;
     opacity: 0.8;
 }
 
-/* GRID AREA - TARIK KE BAWAH LG */
+/* GRID AREA */
 #grid-container {
-    flex: 1; /* Ambil baki ruang 100% */
+    flex: 1; 
     display: flex;
-    align-items: flex-start; /* Ubah ke flex-start supaya dia rapat ke atas sikit */
+    align-items: flex-start; 
     justify-content: center;
-    padding-top: 5px;
-    padding-bottom: 20px; /* Tambah ruang bawah supaya tak rapat sangat dengan bucu skrin */
+    padding-top: 10px;
+    padding-bottom: 15px; 
     overflow: hidden; 
 }
 
-/* Pastikan grid dlm container ni boleh membesar */
 #grid-container canvas, #grid-container table {
-    max-height: 95%; 
+    max-height: 98%; 
     max-width: 100%;
+    touch-action: none;
 }
 
 /* --- ANIMASI --- */

@@ -19,30 +19,22 @@
 <body class="game-body">
 
     <div id="game-container">
-        <header id="game-header">
-            <div class="header-left" style="display: flex; gap: 5px;">
+        <header id="game-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px;">
+            <div class="header-left">
                 <button onclick="window.location.href='index.html'" class="btn-home">
                     <i class="fas fa-home"></i>
                 </button>
-                <button onclick="Tutorial.show()" class="btn-home" style="background: #00acc1;">
+                <button onclick="Tutorial.show()" class="btn-home" style="background: #00acc1; margin-left: 5px;">
                     <i class="fas fa-question"></i>
                 </button>
             </div>
 
-            <div class="header-center">
-                <div class="info-wrapper">
-                    <div class="info-box">
-                        <span class="label">SKOR</span>
-                        <span id="score" class="value">0</span>
-                    </div>
-                    <div class="info-box">
-                        <span class="label">MASA</span>
-                        <span id="timer" class="value">00:00</span>
-                    </div>
+            <div class="header-center" style="display: flex; flex-direction: column; align-items: center; flex: 1; background: rgba(255,255,255,0.3); border-radius: 30px; padding: 5px 0;">
+                <div id="timer" style="font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: #00838f; line-height: 1; text-shadow: 2px 2px 0 #fff;">
+                    00:00
                 </div>
-                
-                <div class="combo-bar-container">
-                    <div class="combo-bar-fill"></div>
+                <div class="combo-bar-container" style="width: 110px; height: 8px; background: rgba(0,0,0,0.15); border-radius: 10px; margin-top: 5px; overflow: hidden; display: none; border: 1px solid #00acc1;">
+                    <div class="combo-bar-fill" style="width: 100%; height: 100%; background: linear-gradient(90deg, #ffeb3b, #f57f17); box-shadow: 0 0 10px #ffeb3b;"></div>
                 </div>
             </div>
 
@@ -54,12 +46,18 @@
             </div>
         </header>
 
-        <div id="player-bar" style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.8); margin: 5px 15px; padding: 6px 15px; border-radius: 50px; border: 2px solid #00acc1; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-            <img id="user-avatar" src="" alt="Avatar" style="width: 30px; height: 30px; border-radius: 50%; background: #e0f7fa; margin-right: 10px; border: 2px solid #00acc1; object-fit: cover;">
+        <div id="player-bar" style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.9); margin: 5px 15px; padding: 8px 20px; border-radius: 50px; border: 2px solid #00acc1; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <div style="display: flex; align-items: center;">
+                <img id="user-avatar" src="" alt="Avatar" style="width: 35px; height: 35px; border-radius: 50%; background: #e0f7fa; margin-right: 12px; border: 2px solid #00acc1; object-fit: cover;">
+                <span id="display-username" style="font-family: 'Fredoka One', cursive; color: #333; font-size: 0.9rem; text-transform: uppercase;">
+                    Pemain...
+                </span>
+            </div>
             
-            <span id="display-username" style="font-family: 'Fredoka One', cursive; color: #333; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
-                Pemain...
-            </span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-family: 'Fredoka One', cursive; color: #00acc1; font-size: 0.7rem; letter-spacing: 1px;">SKOR</span>
+                <span id="score" style="font-family: 'Fredoka One', cursive; color: #f57f17; font-size: 1.8rem; text-shadow: 1px 1px 0 #fff;">0</span>
+            </div>
         </div>
 
         <section id="word-list-area" style="position: relative; margin-top: 15px; padding-top: 20px;">
@@ -74,8 +72,7 @@
     </div>
 
     <div id="game-modal">
-        <div class="modal-content">
-            </div>
+        <div class="modal-content"></div>
     </div>
 
     <script src="j_sound.js"></script>
@@ -83,7 +80,8 @@
     <script src="j_grid.js"></script>      
     <script src="j_interaction.js"></script> 
     <script src="j_timer.js"></script>
-    <script src="j_bonus.js"></script> <script src="j_score.js"></script>
+    <script src="j_bonus.js"></script> 
+    <script src="j_score.js"></script>
     <script src="j_modal.js"></script>
     <script src="j_tuto.js"></script> 
     <script src="j_debug.js"></script> 

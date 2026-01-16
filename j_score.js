@@ -1,70 +1,84 @@
 /**
- * j_score.js - Versi 1 Mata (Synced & Fixed)
+ * j_score.js - Versi v4.2.0 (Level x Combo Multiplier)
  */
 const ScoreSystem = {
     currentCombo: 1,
-    comboWindow: 20, 
-    isFirstWord: true, 
-    
-    settings: {
-        pointsPerWord: 1 // Dah tukar balik ke 1 mata
+    comboWindow: 20000, // 20 saat (dalam milisaat)
+    isFirstWord: true,
+
+    /**
+     * Ambil mata asas mengikut tahap kesukaran
+     * EASY = 1, MEDIUM = 2, HARD = 3
+     */
+    getDifficultyPoints() {
+        const level = localStorage.getItem('selectedLevel') || 'MEDIUM';
+        switch(level.toUpperCase()) {
+            case 'HARD': return 3;
+            case 'MEDIUM': return 2;
+            case 'EASY': return 1;
+            default: return 1;
+        }
     },
 
     /**
-     * Dikira setiap kali perkataan dijumpai
+     * Fungsi utama kira skor dipanggil oleh j_game.js
      */
-    calculateWordScore(word, secondsTaken, isHintUsed, isDiagonal) {
+    calculateWordScore(word, secondsTaken, isHintUsed) {
         try {
-            // 1. LOGIK COMBO
-            if (!this.isFirstWord && secondsTaken > 0 && secondsTaken <= this.comboWindow) {
+            const msTaken = secondsTaken * 1000; 
+
+            // 1. LOGIK PENGIRAAN COMBO
+            if (!this.isFirstWord && msTaken > 0 && msTaken <= this.comboWindow) {
                 this.currentCombo++;
             } else {
                 this.currentCombo = 1;
-                this.isFirstWord = false; 
+                this.isFirstWord = false;
             }
 
-            // 2. TRIGGER VISUAL & SOUND
-            if (this.currentCombo > 1) {
-                if (typeof BonusUI !== 'undefined' && BonusUI.showCombo) {
-                    BonusUI.showCombo(this.currentCombo);
-                }
+            // 2. TRIGGER VISUAL (BonusUI) & BUNYI
+            if (this.currentCombo > 1 && typeof BonusUI !== 'undefined') {
+                BonusUI.showCombo(this.currentCombo);
                 if (typeof SoundEngine !== 'undefined' && SoundEngine.playCombo) {
                     SoundEngine.playCombo();
                 }
             }
 
-            // 3. KIRA SKOR (pointsPerWord * multiplier)
-            let total = this.settings.pointsPerWord * this.currentCombo;
+            // 3. KIRA SKOR AKHIR (Level Points x Combo Multiplier)
+            let basePoints = this.getDifficultyPoints();
             
-            // Jika kau taknak bonus diagonal, biarkan 0 atau buang baris ni
-            // if (isDiagonal) total += 0; 
+            // FORMULA: (Mata Level) x (Nilai Combo)
+            let total = basePoints * this.currentCombo;
 
-            // Jika guna hint, tiada mata diberikan
+            // Jika guna hint, skor jadi 0 dan combo reset
             if (isHintUsed) {
                 total = 0;
                 this.currentCombo = 1;
             }
 
-            console.log(`Score: +${total} (Multiplier: x${this.currentCombo})`);
+            console.log(`[Score] Level: ${localStorage.getItem('selectedLevel')} | Base: ${basePoints} | Combo: x${this.currentCombo} | Total: +${total}`);
+            
             return total;
 
         } catch (e) {
-            console.error("Score Error:", e);
+            console.error("ScoreSystem Error:", e);
             return 1; 
         }
     },
 
     /**
-     * Fungsi Bonus Akhir (Wajib ada untuk j_game.js)
+     * Bonus kemenangan (kekalkan 0 jika tiada bonus tambahan)
      */
     calculateFinalBonus(totalSeconds) {
-        return 0; // Kekalkan 0 supaya tak tambah skor pelik-pelik masa menang
+        return 0; 
     },
 
+    /**
+     * Reset skor bila game bermula semula
+     */
     resetScore() {
         this.currentCombo = 1;
         this.isFirstWord = true;
-        if (typeof BonusUI !== 'undefined' && BonusUI.hideBar) {
+        if (typeof BonusUI !== 'undefined') {
             BonusUI.hideBar();
         }
     }

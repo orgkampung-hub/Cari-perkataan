@@ -1,5 +1,6 @@
 /**
- * j_modal.js - Versi Global (Auto-Submit & Synced with Combo System)
+ * j_modal.js - Versi Global (Auto-Submit & Synced with Column A-D)
+ * Update: Menggunakan URL Script Baru (qbT) & Susunan nama, masa, skor, level.
  */
 
 const ModalSystem = {
@@ -11,7 +12,7 @@ const ModalSystem = {
         const modal = document.getElementById('game-modal');
         if (!modal) return;
 
-        // Ambil nama pemain
+        // Ambil nama pemain yang tersimpan
         const savedUsername = localStorage.getItem('username') || "PEMAIN_RAWAK";
 
         const modalContent = modal.querySelector('.modal-content');
@@ -32,8 +33,8 @@ const ModalSystem = {
                     </div>
                 </div>
 
-                <div id="status-hantar" style="margin: 10px 0; font-size: 0.8rem; color: #4caf50; font-weight: bold;">
-                    <i class="fas fa-spinner fa-spin"></i> MENYIMPAN SKOR...
+                <div id="status-hantar" style="margin: 10px 0; font-size: 0.8rem; color: #f57f17; font-weight: bold;">
+                    <i class="fas fa-spinner fa-spin"></i> MENYIMPAN SKOR KE AWAN...
                 </div>
                 
                 <button onclick="window.location.href='highscore.html'" 
@@ -67,7 +68,6 @@ const ModalSystem = {
         }, 50);
     },
 
-    // Fungsi khas untuk restart supaya combo reset betul-betul
     handleRestart() {
         if (typeof ScoreSystem !== 'undefined') {
             ScoreSystem.resetScore();
@@ -75,21 +75,35 @@ const ModalSystem = {
         window.location.reload();
     },
 
+    /**
+     * Hantar data ke Google Sheets mengikut susunan:
+     * A:nama, B:masa, C:skor, D:level
+     */
     async autoSubmit(name, score, time) {
         const statusDiv = document.getElementById('status-hantar');
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyWEF1_2o7TXhuREdwl4dxr9WMqSNfoEWCdQa2FRvlrkMA-fVAMpghhMuf1wnXuSit4/exec';
+        
+        // URL Web App Google Script yang paling baru kau bagi tadi
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyLri7drzKjrP23M7Uwy35GLTd4pFE15_HKCUtCiEDxMrll2uYI7U4E2vU-vd5vgqbT/exec';
+
+        // Ambil level semasa dari localStorage (auto lowercase)
+        const currentLevel = (localStorage.getItem('selectedLevel') || 'medium').toLowerCase();
 
         const formData = new FormData();
-        formData.append('nama', name);
-        formData.append('masa', time);
-        formData.append('skor', score);
+        formData.append('nama', name);   // Masuk Column A
+        formData.append('masa', time);   // Masuk Column B
+        formData.append('skor', score);  // Masuk Column C
+        formData.append('level', currentLevel); // Masuk Column D
 
         try {
-            // Gunakan mode no-cors untuk Google Apps Script
-            await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
+            // Gunakan fetch dengan mode no-cors
+            await fetch(scriptURL, { 
+                method: 'POST', 
+                body: formData, 
+                mode: 'no-cors' 
+            });
             
             if (statusDiv) {
-                statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> SKOR BERJAYA DISIMPAN!`;
+                statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> SKOR & LEVEL BERJAYA DISIMPAN!`;
                 statusDiv.style.color = "#4caf50";
             }
         } catch (error) {
@@ -112,5 +126,5 @@ const ModalSystem = {
     }
 };
 
-// Inisialisasi
+// Inisialisasi bila file diload
 document.addEventListener('DOMContentLoaded', () => ModalSystem.init());

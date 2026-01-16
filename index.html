@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cari Perkataan v4.2.0</title>
+    <title>Cari Perkataan v4.2.1</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -73,14 +73,23 @@
         </footer>
     </div>
 
-    <div id="login-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center; font-family: 'Fredoka One', cursive;">
-        <div class="menu-container" style="max-width:320px; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 4px solid #fff;">
-            <h2 style="color:#00acc1; margin-top:0;">PROFIL PEMAIN</h2>
-            <div id="login-warning" style="display:none; background:#ffebee; color:#d32f2f; padding:10px; border-radius:15px; font-size:0.75rem; margin-bottom:15px; border: 2px solid #ffcdd2;"></div>
-            <p style="color:#888; font-size:0.8rem; margin-bottom:20px;">Masukkan nama untuk simpan skor & masuk Leaderboard.</p>
-            <input type="text" id="loginInput" placeholder="NAMA KAMU..." style="width:100%; padding:15px; border-radius:20px; border:2px solid #b2ebf2; margin-bottom:20px; text-align:center; font-family:'Fredoka One'; outline:none;">
-            <button onclick="saveLogin()" class="btn-play-custom" style="background:#4caf50; box-shadow:0 5px 0 #2e7d32; color:white; border:none; width:100%; cursor:pointer;">SIMPAN & MULA</button>
-            <button onclick="closeLogin()" style="background:none; border:none; color:#ff5252; margin-top:15px; cursor:pointer; font-family:'Fredoka One'; font-size:0.8rem; text-decoration: underline;">BATAL</button>
+    <div id="login-modal" class="modal-overlay-fix">
+        <div class="menu-container login-box-fix">
+            <h2 class="login-title">PROFIL PEMAIN</h2>
+            
+            <div id="login-warning"></div>
+            
+            <p class="login-desc">Masukkan nama untuk simpan skor & masuk Leaderboard.</p>
+            
+            <input type="text" id="loginInput" placeholder="NAMA KAMU...">
+            
+            <button onclick="saveLogin()" class="btn-login-main">
+                SIMPAN & MULA
+            </button>
+            
+            <button onclick="closeLogin()" class="btn-login-cancel">
+                BATAL
+            </button>
         </div>
     </div>
 

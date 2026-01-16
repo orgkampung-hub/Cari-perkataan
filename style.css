@@ -1,5 +1,5 @@
-/* style.css - v4.2.3 (Final Shrink to Fit) */
-* { box-sizing: border-box; }
+/* style.css - v4.2.7 (Fixed User Panel, Modal & Login Utama) */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
     background: #f0f9ff;
@@ -16,9 +16,9 @@ body {
 .menu-container {
     width: 92%;
     max-width: 360px;
-    max-height: 96vh; /* Pendekkan sikit container */
+    max-height: 98vh;
     background: rgba(255, 255, 255, 0.95);
-    padding: 12px 15px; /* Kecilkan padding atas/bawah */
+    padding: 12px 15px;
     border-radius: 35px;
     box-shadow: 0 15px 30px rgba(0,0,0,0.1);
     text-align: center;
@@ -28,45 +28,151 @@ body {
 }
 
 .game-title {
-    font-size: 2rem; /* Kecilkan dari 2.6rem */
+    font-size: 2rem;
     color: #00acc1;
     text-shadow: 2px 2px 0px #e0f7fa;
     margin: 5px 0 10px 0; 
     line-height: 0.9;
 }
 
-/* --- PANEL USER --- */
+/* --- PANEL USER & BUTANG LOGIN UTAMA (IKON KUNCI) --- */
 .user-panel-container {
     background: #ffffff;
-    padding: 8px; 
+    padding: 10px; 
     border-radius: 25px;
     box-shadow: 0 4px 0 #e0f2f1;
     border: 2px solid #b2ebf2;
-    margin-bottom: 10px; 
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Fix untuk butang LOGIN PEMAIN (Ikon Kunci) */
+.btn-login-utama {
+    width: 100% !important;
+    padding: 12px 15px !important;
+    background: #00acc1 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 20px !important; /* Paksa Bulat */
+    font-family: 'Fredoka One', cursive !important;
+    font-size: 0.9rem !important;
+    box-shadow: 0 4px 0 #00838f !important;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+/* Paksa mana-mana butang dlm panel user (Bila Dah Login) jadi bulat */
+.user-panel-container button {
+    width: 100% !important;
+    padding: 10px !important;
+    background: #00acc1 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 20px !important;
+    font-family: 'Fredoka One', cursive !important;
+    font-size: 0.85rem !important;
+    box-shadow: 0 4px 0 #00838f !important;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    -webkit-appearance: none !important;
+    appearance: none !important;
 }
 
 .user-name {
     font-size: 1rem;
     color: #00acc1;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    display: block;
 }
 
-.btn-logout {
-    width: 100%;
-    padding: 6px;
-    background: #ff5252;
-    color: white;
-    border: none;
+.user-label {
+    font-size: 0.6rem;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+/* --- FIX MODAL LOGIN (ANTI-WIN95) --- */
+.modal-overlay-fix {
+    display: none; 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.8); 
+    z-index: 9999; 
+    justify-content: center; 
+    align-items: center;
+}
+
+.login-box-fix {
+    max-width: 320px !important;
+    padding: 25px 20px !important;
+}
+
+#loginInput {
+    width: 100% !important;
+    padding: 15px !important;
+    border-radius: 20px !important;
+    border: 3px solid #b2ebf2 !important;
+    margin-bottom: 20px !important;
+    text-align: center !important;
+    font-family: 'Fredoka One' !important;
+    font-size: 1rem !important;
+    outline: none !important;
+    background: #fff !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+.btn-login-main {
+    width: 100% !important;
+    padding: 15px !important;
+    background: #4caf50 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 20px !important;
+    font-family: 'Fredoka One' !important;
+    box-shadow: 0 5px 0 #2e7d32 !important;
+    font-size: 1rem !important;
+    cursor: pointer;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+.btn-login-cancel {
+    background: none !important;
+    border: none !important;
+    color: #ff5252 !important;
+    margin-top: 15px !important;
+    font-family: 'Fredoka One' !important;
+    font-size: 0.85rem !important;
+    text-decoration: underline !important;
+}
+
+#login-warning {
+    display: none;
+    background: #ffebee;
+    color: #d32f2f;
+    padding: 10px;
     border-radius: 15px;
-    font-size: 0.65rem;
-    box-shadow: 0 3px 0 #d32f2f;
+    font-size: 0.75rem;
+    margin-bottom: 15px;
+    border: 2px solid #ffcdd2;
+    width: 100%;
 }
 
 /* --- LEVEL SELECTOR --- */
-.level-section {
-    margin-bottom: 10px;
-}
-
+.level-section { margin-bottom: 10px; }
 .level-selector {
     display: flex;
     background: #e0f2f1;
@@ -74,7 +180,6 @@ body {
     border-radius: 20px;
     gap: 4px;
 }
-
 .lvl-btn {
     flex: 1;
     padding: 8px 2px;
@@ -83,7 +188,6 @@ body {
     cursor: pointer;
     color: #00acc1;
 }
-
 #lvl-easy:checked + .l-easy { background: #4caf50; color: white; box-shadow: 0 3px 0 #2e7d32; }
 #lvl-med:checked + .l-med { background: #ffb74d; color: white; box-shadow: 0 3px 0 #ffa726; }
 #lvl-hard:checked + .l-hard { background: #ff5252; color: white; box-shadow: 0 3px 0 #d32f2f; }
@@ -96,28 +200,13 @@ body {
     gap: 8px; 
     margin-bottom: 10px;
 }
-
 .btn-menu {
-    width: 100%;
-    border: none;
-    padding: 10px 0; 
-    border-radius: 20px;
-    color: white;
+    width: 100%; border: none; padding: 10px 0; 
+    border-radius: 20px; color: white;
     font-family: 'Fredoka One';
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
     box-shadow: 0 4px 0 rgba(0,0,0,0.15);
 }
-
-.center-row {
-    grid-column: span 2;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-}
-
 .b-negara { background: #4fc3f7; }
 .b-sukan  { background: #ffb74d; }
 .b-haiwan { background: #81c784; }
@@ -127,47 +216,31 @@ body {
 
 /* Custom Section */
 .custom-section {
-    background: #f1f8e9;
-    padding: 8px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    border: 2px solid #dcedc8;
+    background: #f1f8e9; padding: 8px; border-radius: 20px;
+    margin-bottom: 10px; border: 2px solid #dcedc8;
 }
-
 .label { font-size: 0.6rem; color: #78909c; margin-bottom: 4px; display: block; }
-
 #customInput {
-    width: 100%;
-    padding: 6px;
-    border-radius: 12px;
-    border: 2px solid #cfd8dc;
-    margin-bottom: 6px;
-    font-family: 'Fredoka One';
-    font-size: 0.8rem;
-    text-align: center;
+    width: 100%; padding: 8px; border-radius: 12px; border: 2px solid #cfd8dc;
+    margin-bottom: 6px; font-family: 'Fredoka One'; font-size: 0.8rem; text-align: center;
+    -webkit-appearance: none; appearance: none;
 }
-
 .btn-play-custom {
-    width: 100%;
-    padding: 8px;
-    border-radius: 15px;
-    background: #7cb342;
-    color: white;
-    box-shadow: 0 4px 0 #558b2f;
-    border: none;
+    width: 100%; padding: 8px; border-radius: 15px; background: #7cb342;
+    color: white; box-shadow: 0 4px 0 #558b2f; border: none;
 }
 
-/* Leaderboard Button - WAJIB NAMPAK */
+/* Leaderboard Button */
 .btn-score {
-    width: 100%;
-    padding: 12px;
-    border-radius: 20px;
-    border: none;
-    background: #fdd835;
-    color: #5d4037;
-    font-family: 'Fredoka One';
-    box-shadow: 0 4px 0 #fbc02d;
-    font-size: 0.9rem;
+    width: 100%; padding: 12px; border-radius: 20px; border: none;
+    background: #fdd835; color: #5d4037; font-family: 'Fredoka One';
+    box-shadow: 0 4px 0 #fbc02d; font-size: 0.9rem;
+}
+
+/* Butang Logout (Khas) */
+.btn-logout {
+    background: #ff5252 !important;
+    box-shadow: 0 4px 0 #d32f2f !important;
 }
 
 footer { margin-top: auto; padding-top: 5px; }

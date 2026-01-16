@@ -1,8 +1,6 @@
 /**
  * j_debug.js - Versi Visual Compact & Professional
- * - Panel kecil & terapung
- * - Butang disusun kemas (SHOW, CRS, WIN)
- * - Selaras dengan semua logik game
+ * - Trigger: Ketuk 5 kali pada area SKOR di player-bar
  */
 
 const Debugger = {
@@ -11,12 +9,13 @@ const Debugger = {
 
     init() {
         const checkReady = setInterval(() => {
-            const infoBox = document.querySelector('.info-box');
-            if (infoBox) {
-                infoBox.addEventListener('click', () => this.handleTap());
+            const scoreArea = document.getElementById('score');
+            if (scoreArea) {
+                scoreArea.parentElement.addEventListener('click', () => this.handleTap());
                 this.injectUI();
                 this.injectStyles();
                 clearInterval(checkReady);
+                console.log("Debugger: Ready. Tap 5x on Score to activate.");
             }
         }, 500);
     },
@@ -27,7 +26,7 @@ const Debugger = {
         style.id = 'debug-styles';
         style.innerHTML = `
             #debug-main-ui {
-                position: fixed; top: 115px; left: 50%; transform: translateX(-50%);
+                position: fixed; top: 130px; left: 50%; transform: translateX(-50%);
                 z-index: 10000; width: auto; pointer-events: none;
             }
             .debug-container {
@@ -43,7 +42,7 @@ const Debugger = {
             }
             .debug-row { display: flex; gap: 4px; }
             .btn-db {
-                flex: 1; padding: 8px 4px; border: none; border-radius: 6px;
+                flex: 1; padding: 10px 4px; border: none; border-radius: 6px;
                 font-size: 10px; font-weight: bold; cursor: pointer; color: white;
                 text-transform: uppercase; transition: opacity 0.2s;
             }
@@ -52,7 +51,6 @@ const Debugger = {
             .btn-crs { background: #444; }
             .btn-win { background: #1b5e20; border: 1px solid #2e7d32; }
             
-            /* Highlights */
             .debug-highlight-ans { background: rgba(0, 255, 0, 0.3) !important; outline: 2px solid #0f0 !important; z-index: 5; }
             .debug-highlight-crs { background: rgba(255, 0, 0, 0.4) !important; outline: 1px solid #f00 !important; }
         `;
@@ -92,9 +90,9 @@ const Debugger = {
 
     refreshData() {
         if (typeof Generator !== 'undefined') {
-            document.getElementById('db-wds').innerText = Generator.wordsActuallyPlaced.length;
-            document.getElementById('db-crs').innerText = Generator.stats.crs;
-            document.getElementById('db-try').innerText = Generator.stats.try;
+            document.getElementById('db-wds').innerText = Generator.wordsActuallyPlaced ? Generator.wordsActuallyPlaced.length : 0;
+            document.getElementById('db-crs').innerText = Generator.stats ? Generator.stats.crs : 0;
+            document.getElementById('db-try').innerText = Generator.stats ? Generator.stats.try : 0;
         }
     },
 
@@ -121,18 +119,26 @@ const Debugger = {
 
     forceWin() {
         if (!this.isEnabled) return;
+        
+        // 1. Mark visual grid
         document.querySelectorAll('.grid-cell[data-is-answer="true"]').forEach(c => c.classList.add('cell-found'));
         
-        if (typeof GameController !== 'undefined' && Generator.wordsActuallyPlaced) {
-            Generator.wordsActuallyPlaced.forEach(w => GameController.markWordFound(w.toUpperCase().trim()));
-            
+        // 2. Tandakan semua perkataan dalam list secara visual sahaja (Found)
+        document.querySelectorAll('.word-item').forEach(el => el.classList.add('found'));
+
+        if (typeof GameController !== 'undefined') {
+            // 3. Paksa jumlah jumpa sama dengan jumlah patut cari
+            GameController.foundCount = GameController.totalToFind;
+
+            // 4. Trigger Victory sekali sahaja dengan delay kecil
+            // Delay ni penting supaya animation grid sempat jalan sikit
             setTimeout(() => {
-                const modal = document.getElementById('game-modal');
-                if (!modal || modal.style.display === 'none' || modal.classList.contains('modal-hidden')) {
-                    GameController.foundCount = GameController.totalToFind;
-                    GameController.victory();
+                // Pastikan ModalSystem reset submit flag untuk sesi baru ni
+                if (typeof ModalSystem !== 'undefined') {
+                    ModalSystem.isSubmitting = false;
                 }
-            }, 500);
+                GameController.victory();
+            }, 300);
         }
     },
 

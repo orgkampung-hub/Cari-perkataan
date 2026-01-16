@@ -1,4 +1,4 @@
-// script.js - Pengurus Menu Utama & Sistem Profil (v4.2.0)
+// script.js - Pengurus Menu Utama & Sistem Profil (v4.2.1)
 
 // --- SISTEM PROFIL (LOGIN/LOGOUT) ---
 function renderUserPanel() {
@@ -13,14 +13,15 @@ function renderUserPanel() {
                 <div class="user-label">Pemain Aktif</div>
                 <div class="user-name">${username.toUpperCase()}</div>
                 <button onclick="logout()" class="btn-logout">
-                    LOGOUT / TUKAR NAMA
+                    <i class="fas fa-sign-out-alt"></i> LOGOUT / TUKAR NAMA
                 </button>
             </div>
         `;
     } else {
+        // Class .btn-login-utama sekarang akan ditangkap oleh CSS baru kita
         panel.innerHTML = `
             <button onclick="login()" class="btn-login-utama">
-                🔑 LOGIN PEMAIN
+                <i class="fas fa-key"></i> LOGIN PEMAIN
             </button>
         `;
     }
@@ -32,9 +33,17 @@ function login() {
         const warning = document.getElementById('login-warning');
         if(warning) warning.style.display = 'none';
         
+        // Pastikan modal muncul dengan flex supaya center
         modal.style.display = 'flex';
-        document.getElementById('loginInput').focus();
-        document.getElementById('loginInput').value = "";
+        
+        // Fokuskan pada input nama secara automatik
+        setTimeout(() => {
+            const input = document.getElementById('loginInput');
+            if(input) {
+                input.focus();
+                input.value = "";
+            }
+        }, 100);
     }
 }
 
@@ -96,22 +105,21 @@ function showWarning(mesej) {
     }
 }
 
-// --- FUNGSI BARU: AMBIL LEVEL YANG DIPILIH ---
+// --- FUNGSI AMBIL LEVEL YANG DIPILIH ---
 function getSelectedLevel() {
     const levels = document.getElementsByName('level');
     for (let l of levels) {
         if (l.checked) return l.value;
     }
-    return 'MEDIUM'; // Default jika apa-apa berlaku
+    return 'MEDIUM'; 
 }
 
-// --- LOGIK PEMILIHAN KATEGORI (DENGAN LEVEL) ---
+// --- LOGIK PEMILIHAN KATEGORI ---
 function pickCategoryCross(kategori) {
     if (!localStorage.getItem('username')) {
         showWarning("Sila set nama dulu sebelum main!");
         return;
     }
-    // Simpan Level & Kategori
     localStorage.setItem('selectedLevel', getSelectedLevel());
     localStorage.setItem('selectedCategory', kategori.toUpperCase());
     window.location.href = 'game.html';
@@ -159,4 +167,5 @@ function goToHighscore() {
     window.location.href = "highscore.html";
 }
 
+// Jalankan fungsi render bila page dah load
 document.addEventListener('DOMContentLoaded', renderUserPanel);
