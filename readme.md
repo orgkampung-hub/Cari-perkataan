@@ -1,55 +1,35 @@
-# 🧩 Word Search Arena - Web Game (v4.1.0)
+# 🧩 Word Search Engine v4.2.0
 
-Game mencari perkataan berasaskan web yang dinamik, responsif, dan dioptimumkan untuk pengalaman "Premium Mobile Gaming".
+Enjin permainan cari kata yang dioptimumkan untuk kelancaran visual, sistem combo dinamik, dan integrasi Google Sheets.
 
-## 🚀 Ciri-Ciri Utama (Update v4.1.0)
-- **Dynamic Avatar (DiceBear)**: Menjana avatar unik secara automatik berdasarkan nama pemain menggunakan API DiceBear.
-- **Player Bar & Profile**: Paparan identiti pemain (Nama & Avatar) secara real-time dlm permainan.
-- **Tag Kategori "Gantung"**: UI kategori yang menonjol tanpa mengganggu ruang grid utama.
-- **Sistem Tutorial Terintegrasi**: Panduan interaktif 2-langkah untuk pemain baru dengan sistem memori (Local Storage).
-- **Modular Scoring & Leaderboard**: Pengiraan markah kompleks dengan integrasi Google Sheets API.
+## 🚀 Ciri-ciri Utama
+- **Sistem Skor Mutlak**: 1 Jawapan = 1 Mata (Standard).
+- **Visual Combo v4.2**: Animasi "Zoom Pop" gergasi di tengah skrin untuk gameplay yang lebih menyeronokkan.
+- **Auto-Submit**: Skor dihantar secara automatik ke database awan (Google Sheets).
+- **Fix Victory Stuck**: Menghapuskan ralat 'is not a function' yang menghalang Modal Menang muncul.
 
-## 📂 Struktur Fail (Architecture)
+## 📁 Struktur Fail & Pemasangan
+Pastikan turutan panggilan fail dalam index.html adalah seperti berikut untuk mengelakkan ralat 'undefined':
 
-### 📜 JavaScript (Logik & Data)
-- **j_game.js** : **Controller Utama**. Menguruskan aliran permainan, paparan profil pemain, dan integrasi antara modul.
-- **j_generator.js** : **Engine Grid**. Logik penempatan perkataan secara rawak/kategori dlm grid.
-- **j_interaction.js** : Menguruskan input sentuhan (touch/drag) pemain pada grid.
-- **j_score.js** : **Kalkulator Skor**. Menguruskan poin, bonus kelajuan, dan penalti.
-- **j_timer.js** : Sistem masa (Stopwatch) dan pemformatan `MM:SS`.
-- **j_modal.js** : Menguruskan UI kemenangan dan penghantaran skor ke Leaderboard.
-- **j_tuto.js** : Logik sistem tutorial interaktif (Show/Hide/Memory).
-- **j_hint.js** : Sistem bantuan (Lightbulb) untuk mendedahkan huruf.
-- **j_sound.js** : Pengurus kesan bunyi (SFX) untuk setiap aksi.
+1. c_bonus.css
+2. j_bonus.js
+3. j_score.js
+4. j_modal.js
+5. j_game.js
 
-### 🎨 CSS (Rupa Paras & Animasi)
-- **c_game.css** : **Layout Global**. Menggunakan *Flexbox* untuk memastikan grid sentiasa maksima mengikut saiz skrin.
-- **c_header.css** : Gaya bahagian skor, masa, dan butang navigasi atas.
-- **c_grid.css** : Rekabentuk sel grid dan kesan visual semasa pemilihan huruf.
-- **c_modal.css** : Animasi `popIn` untuk kotak kemenangan dan profil.
-- **c_hint.css** : Kesan visual khas untuk huruf yang dibantu oleh sistem hint.
+## 🛠️ Ringkasan Logik Versi 4.2.0
+| Fail | Peranan | Status |
+| :--- | :--- | :--- |
+| j_score.js | Mengira mata (1:1) & menguruskan data combo. | ✅ STABLE |
+| j_bonus.js | Mengawal animasi popup "COMBO xN" di skrin. | ✅ STABLE |
+| j_modal.js | Paparan kemenangan & fungsi hantar skor ke Google. | ✅ STABLE |
+| j_game.js | Controller utama yang menghubungkan semua sistem. | ✅ STABLE |
 
-## ⚙️ Integrasi Backend (Google Sheets)
-Sistem ini menggunakan **Google Apps Script (GAS)** sebagai pengurus pangkalan data tanpa pelayan (Serverless).
-
-- **Endpoint**: Google Apps Script Web App URL.
-- **Metod**: `POST` (Simpan Skor) & `GET` (Ambil Top 10).
-- **Ranking Priority**: 
-  1. Skor Tertinggi (Primary)
-  2. Masa Terpantas (Secondary - jika skor seri)
-
-## 🛠️ Nota Penyelenggaraan (Developer Tips)
-
-### Update Versi & Branding
-Untuk menukar label versi atau nama pembangun, cari bahagian `<footer>` dalam `index.html`.
-
-### Menambah Kategori Baru
-1. Tambah data perkataan dalam `j_generator.js`.
-2. Tambah butang kategori dlm `index.html` dengan fungsi `pickCategoryCross('nama_kategori')`.
-
-### Melaras Kesukaran
-Buka `j_score.js` untuk melaras `pointsPerLetter` atau `j_hint.js` untuk mengehadkan jumlah bantuan.
+## ⚠️ Nota Penting
+- **Z-Index**: Modal Menang ditetapkan pada 2,000,000 untuk menutup semua elemen lain.
+- **Combo Window**: Masa 20 saat diberikan antara setiap perkataan untuk mengekalkan rentak combo.
+- **Reset**: Skor dan combo akan di-reset secara automatik setiap kali "Main Lagi" ditekan.
 
 ---
-**Status Projek:** `STABLE RELEASE (v4.1.0)`  
-**Developer:** `AKULAS`
+**Versi:** 4.2.0 (Final Architecture)
+**Update:** 2026-01-16
