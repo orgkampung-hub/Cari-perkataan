@@ -1,25 +1,33 @@
-// j_generator.js - Versi "Arkitek" (Kebal & Stabil)
+// j_generator.js - Versi "Arkitek" (v4.2.0 Level System)
 
 const Generator = {
-    gridSize: 12,
+    gridSize: 10, // Akan berubah ikut level
     grid: [],
     selectedWords: [],
     wordsActuallyPlaced: [], 
     usageMask: [], 
     answerPositions: new Set(), 
     stats: { try: 0, crs: 0 },
+    currentLevel: 'MEDIUM', // Default
 
     async init() {
-        console.log("Generator: Mengaktifkan Enjin Arkitek...");
+        console.log("Generator: Mengaktifkan Enjin Arkitek v4.2.0...");
+        
+        // 1. Ambil Level dari Storage
+        this.currentLevel = localStorage.getItem('selectedLevel') || 'MEDIUM';
+        
+        // 2. Set Saiz Grid ikut Level
+        if (this.currentLevel === 'EASY') this.gridSize = 8;
+        else if (this.currentLevel === 'MEDIUM') this.gridSize = 10;
+        else this.gridSize = 12;
+
         try {
             const response = await fetch('words.json');
             const data = await response.json();
             
-            // Ambil kategori dari storage
             const category = localStorage.getItem('selectedCategory') || "HAIWAN";
             let pool = [];
 
-            // Logik Gado-Gado / Custom / Spesifik
             if (category === 'RAWAK') {
                 Object.values(data).forEach(cat => pool = pool.concat(cat));
             } else if (category === 'CUSTOM') {
@@ -29,13 +37,14 @@ const Generator = {
                 pool = data[category] || data["HAIWAN"];
             }
             
-            // Pilih 12 patah perkataan secara rawak
+            // Pilih jumlah perkataan ikut saiz grid (Easy sikit, Hard banyak)
+            let wordCount = this.currentLevel === 'EASY' ? 8 : (this.currentLevel === 'MEDIUM' ? 10 : 12);
+
             this.selectedWords = [...pool]
                 .sort(() => 0.5 - Math.random())
-                .slice(0, 12)
+                .slice(0, wordCount)
                 .map(w => w.trim().toUpperCase());
             
-            // Bina layout dan pulangkan hasil
             return this.buildLayout();
         } catch (e) {
             console.error("Generator Error:", e);
@@ -44,25 +53,38 @@ const Generator = {
     },
 
     buildLayout() {
-        // Reset Grid
         this.grid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(''));
         this.usageMask = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(0));
         this.answerPositions.clear(); 
         this.wordsActuallyPlaced = [];
         this.stats = { try: 0, crs: 0 };
 
-        const allDirs = [
-            { r: 0, c: 1 }, { r: 0, c: -1 }, 
-            { r: 1, c: 0 }, { r: -1, c: 0 },
-            { r: 1, c: 1 }, { r: -1, c: -1 },
-            { r: 1, c: -1 }, { r: -1, c: 1 }
-        ];
+        // 3. Tentukan Arah ikut Level (Kunci Kesukaran)
+        let allDirs = [];
+        if (this.currentLevel === 'EASY') {
+            allDirs = [
+                { r: 0, c: 1 }, // Kanan
+                { r: 1, c: 0 }  // Bawah
+            ];
+        } else if (this.currentLevel === 'MEDIUM') {
+            allDirs = [
+                { r: 0, c: 1 }, { r: 1, c: 0 }, 
+                { r: 1, c: 1 }, { r: 1, c: -1 } // + Pepenjuru Bawah
+            ];
+        } else {
+            // HARD: Semua arah + Terbalik
+            allDirs = [
+                { r: 0, c: 1 }, { r: 0, c: -1 }, 
+                { r: 1, c: 0 }, { r: -1, c: 0 },
+                { r: 1, c: 1 }, { r: -1, c: -1 },
+                { r: 1, c: -1 }, { r: -1, c: 1 }
+            ];
+        }
 
         this.selectedWords.forEach(word => {
             let bestPos = null;
             let maxScore = -1;
 
-            // 400 cubaan untuk cari tempat paling banyak overlap
             for (let i = 0; i < 400; i++) {
                 this.stats.try++;
                 const dir = allDirs[Math.floor(Math.random() * allDirs.length)];
@@ -86,16 +108,18 @@ const Generator = {
             }
         });
 
-        // SAFETY: Jika grid terlalu kosong (nasib malang), ulang bina
-        if (this.wordsActuallyPlaced.length < 5 && this.selectedWords.length > 5) {
+        if (this.wordsActuallyPlaced.length < 4 && this.selectedWords.length > 4) {
             return this.buildLayout();
         }
 
-        this.injectDecoys();
+        // 4. Inject Decoy hanya untuk Medium & Hard
+        if (this.currentLevel !== 'EASY') {
+            this.injectDecoys();
+        }
+        
         this.fillEmptyCells();
         this.calculateCRS();
 
-        // Render ke skrin
         if (typeof GridEngine !== 'undefined') {
             GridEngine.render(this.grid, this.gridSize, this.answerPositions);
         }
@@ -107,7 +131,6 @@ const Generator = {
     getOverlapScore(word, row, col, dir) {
         const lastR = row + dir.r * (word.length - 1);
         const lastC = col + dir.c * (word.length - 1);
-
         if (lastR < 0 || lastR >= this.gridSize || lastC < 0 || lastC >= this.gridSize) return -1;
 
         let overlaps = 0;
@@ -134,6 +157,7 @@ const Generator = {
     injectDecoys() {
         this.wordsActuallyPlaced.forEach(word => {
             if (word.length < 4) return;
+            // Ambil separuh perkataan sebagai decoy
             const decoy = word.substring(0, Math.floor(word.length / 2 + 1));
             const r = Math.floor(Math.random() * this.gridSize);
             const c = Math.floor(Math.random() * this.gridSize);
@@ -150,7 +174,12 @@ const Generator = {
     },
 
     fillEmptyCells() {
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        // 5. Decoy Logic: HARD hanya guna huruf dari perkataan sasaran
+        let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        if (this.currentLevel === 'HARD') {
+            letters = this.wordsActuallyPlaced.join("");
+        }
+
         for (let r = 0; r < this.gridSize; r++) {
             for (let c = 0; c < this.gridSize; c++) {
                 if (this.grid[r][c] === '') {

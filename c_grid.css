@@ -1,4 +1,4 @@
-/* c_grid.css - Posisi Grid & Visual Loading */
+/* c_grid.css - Posisi Grid & Visual Loading (v4.2.5) */
 
 #grid-container {
     flex: 0 0 auto; 
@@ -8,14 +8,13 @@
     border: 4px solid #00acc1;
     border-radius: 15px;
     display: grid !important;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(12, 1fr);
-    gap: 2px;
+    /* grid-template diuruskan oleh JS (j_grid.js) */
+    gap: 3px; 
     padding: 8px;
     box-sizing: border-box;
     touch-action: none;
     margin-bottom: 10px;
-    position: relative; /* Tambahan: Untuk kedudukan loading */
+    position: relative;
 }
 
 .grid-cell {
@@ -23,30 +22,56 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 5vw; /* Dibesarkan sikit supaya penuh petak */
-    font-weight: 900; /* Lebih tebal */
+    font-size: 1.2rem; 
+    font-weight: 900;
     color: #006064;
     border-radius: 4px;
     user-select: none;
     text-transform: uppercase;
+    aspect-ratio: 1 / 1;
+    transition: background 0.2s, transform 0.1s;
 }
 
+/* Biar huruf besar sikit dlm skrin besar */
 @media (min-width: 500px) {
-    .grid-cell { font-size: 1.4rem; }
+    .grid-cell { font-size: 1.6rem; }
     #grid-container { width: 460px; height: 460px; }
 }
+
+/* --- STATUS VISUAL --- */
 
 /* Warna semasa Tap 1 atau sedang pilih */
 .grid-cell.selecting { 
     background: #00acc1 !important; 
     color: white !important; 
     box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    transform: scale(0.92); /* Efek tekan lebih jelas */
+    z-index: 5;
 }
 
-/* Warna bila dah jumpa */
-.grid-cell.found { 
+/* --- ANIMASI JUMPA JAWAPAN (SMOOTH & CELEBRATE) --- */
+.grid-cell.cell-found { 
     background: #4caf50 !important; 
     color: white !important; 
+    border: 2px solid #ffffff;
+    z-index: 10;
+    /* Guna cubic-bezier untuk efek bounce yang mahal */
+    animation: celebrate 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.6);
+}
+
+@keyframes celebrate {
+    0% { 
+        transform: scale(1); 
+    }
+    50% { 
+        transform: scale(1.3); /* Membesar sikit masa puncak */
+        background: #81c784 !important;
+    }
+    100% { 
+        transform: scale(1); 
+        background: #4caf50 !important;
+    }
 }
 
 /* Animasi Spinner Loading */
@@ -60,7 +85,7 @@
     display: inline-block;
 }
 
-/* Style tambahan untuk teks loading dalam grid */
+/* Style Teks Loading */
 #grid-container div[style*="text-align:center"] {
     grid-column: 1 / -1;
     grid-row: 1 / -1;

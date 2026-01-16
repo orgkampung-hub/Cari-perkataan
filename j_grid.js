@@ -1,13 +1,13 @@
-// j_grid.js - Visual & Kawalan Atribut Jawapan
+// j_grid.js - Visual & Kawalan Atribut Jawapan (v4.2.0)
 
 const GridEngine = {
-    // Tambah parameter answerPositions
     render(dataGrid, size, answerPositions = new Set()) {
         const container = document.getElementById('grid-container');
         if (!container) return;
         
         container.innerHTML = '';
-        // CSS Grid Layout: Pastikan saiz grid dinamik ikut size
+        
+        // Dinamik: Mengikut size (8, 10, atau 12)
         container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
 
         for (let r = 0; r < size; r++) {
@@ -15,11 +15,10 @@ const GridEngine = {
                 const cell = document.createElement('div');
                 cell.className = 'grid-cell';
                 
-                // Ambil huruf dari dataGrid (sudah penuh dengan huruf rawak dari Generator)
                 const char = dataGrid[r][c];
                 cell.innerText = char;
                 
-                // DISIPLIN: Hanya petak yang ada dalam answerPositions dianggap jawapan
+                // Set atribut untuk dikesan oleh Interaction JS
                 if (answerPositions.has(`${r},${c}`)) {
                     cell.dataset.isAnswer = "true";
                 } else {
@@ -31,6 +30,6 @@ const GridEngine = {
                 container.appendChild(cell);
             }
         }
-        console.log("GridEngine: Visual siap dengan koordinat jawapan yang tepat.");
+        console.log(`GridEngine: Render ${size}x${size} siap.`);
     }
 };

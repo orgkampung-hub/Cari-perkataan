@@ -1,4 +1,6 @@
-// j_modal.js - Versi Global (Auto-Submit & No Classic Popup)
+/**
+ * j_modal.js - Versi Global (Auto-Submit & Synced with Combo System)
+ */
 
 const ModalSystem = {
     init() {
@@ -9,10 +11,12 @@ const ModalSystem = {
         const modal = document.getElementById('game-modal');
         if (!modal) return;
 
+        // Ambil nama pemain
         const savedUsername = localStorage.getItem('username') || "PEMAIN_RAWAK";
 
         const modalContent = modal.querySelector('.modal-content');
         if (modalContent) {
+            // Masukkan kandungan secara dinamik
             modalContent.innerHTML = `
                 <h2 style="color:#00acc1; margin-top:0; font-family: 'Fredoka One', cursive;">${data.title}</h2>
                 <p style="color:#555; margin-bottom:5px;">${data.message}</p>
@@ -38,7 +42,7 @@ const ModalSystem = {
                 </button>
 
                 <div style="display:flex; gap:10px; justify-content:center;">
-                    <button class="btn-modal-action" onclick="window.location.reload()" 
+                    <button class="btn-modal-action" onclick="ModalSystem.handleRestart()" 
                         style="flex:1; padding:12px; background:#4caf50; color:white; border:none; border-radius:15px; cursor:pointer; font-family: 'Fredoka One', cursive; box-shadow: 0 4px #2e7d32; font-size: 0.8rem;">
                         MAIN LAGI
                     </button>
@@ -49,13 +53,26 @@ const ModalSystem = {
                 </div>
             `;
             
-            // AUTOMATIK HANTAR SKOR SEBAIK SAJA MODAL KELUAR
+            // AUTOMATIK HANTAR SKOR KE GOOGLE SHEETS
             this.autoSubmit(savedUsername, data.score, data.time);
         }
 
-        modal.classList.remove('modal-hidden');
-        modal.classList.add('modal-show');
+        // Paparkan modal dengan animasi
         modal.style.display = 'flex';
+        modal.style.zIndex = '2000000'; // Pastikan di atas Combo Popup
+        
+        setTimeout(() => {
+            modal.classList.remove('modal-hidden');
+            modal.classList.add('modal-show');
+        }, 50);
+    },
+
+    // Fungsi khas untuk restart supaya combo reset betul-betul
+    handleRestart() {
+        if (typeof ScoreSystem !== 'undefined') {
+            ScoreSystem.resetScore();
+        }
+        window.location.reload();
     },
 
     async autoSubmit(name, score, time) {
@@ -68,7 +85,7 @@ const ModalSystem = {
         formData.append('skor', score);
 
         try {
-            // Hantar secara senyap
+            // Gunakan mode no-cors untuk Google Apps Script
             await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
             
             if (statusDiv) {
@@ -76,7 +93,7 @@ const ModalSystem = {
                 statusDiv.style.color = "#4caf50";
             }
         } catch (error) {
-            console.error("Gagal hantar:", error);
+            console.error("Gagal hantar skor:", error);
             if (statusDiv) {
                 statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> GAGAL SIMPAN KE AWAN`;
                 statusDiv.style.color = "#f44336";
@@ -87,10 +104,13 @@ const ModalSystem = {
     hide() {
         const modal = document.getElementById('game-modal');
         if (modal) {
-            modal.style.display = 'none';
             modal.classList.remove('modal-show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
         }
     }
 };
 
-ModalSystem.init();
+// Inisialisasi
+document.addEventListener('DOMContentLoaded', () => ModalSystem.init());

@@ -1,4 +1,4 @@
-// script.js - Pengurus Menu Utama & Sistem Profil (Final v4.1.0)
+// script.js - Pengurus Menu Utama & Sistem Profil (v4.2.0)
 
 // --- SISTEM PROFIL (LOGIN/LOGOUT) ---
 function renderUserPanel() {
@@ -34,7 +34,7 @@ function login() {
         
         modal.style.display = 'flex';
         document.getElementById('loginInput').focus();
-        document.getElementById('loginInput').value = ""; // Clear input bila buka
+        document.getElementById('loginInput').value = "";
     }
 }
 
@@ -45,12 +45,9 @@ function closeLogin() {
 
 function saveLogin() {
     const nameInput = document.getElementById('loginInput');
-    // 1. Trim space & Buang simbol pelik (Hanya benarkan Huruf, Nombor & Space)
     let name = nameInput.value.replace(/[^a-zA-Z0-9 ]/g, "").trim();
-
     const warning = document.getElementById('login-warning');
 
-    // 2. Validasi: Jangan bagi kosong atau kurang 2 huruf
     if (!name || name.length < 2) {
         if(warning) {
             warning.innerText = "Nama kena ada sekurang-kurangnya 2 huruf!";
@@ -60,7 +57,6 @@ function saveLogin() {
         return;
     }
 
-    // 3. Validasi: Hadkan panjang nama (Maks 12 huruf supaya Leaderboard kemas)
     if (name.length > 12) {
         if(warning) {
             warning.innerText = "Nama terlalu panjang (Maks 12 huruf)!";
@@ -70,13 +66,11 @@ function saveLogin() {
         return;
     }
 
-    // 4. Jika lulus semua, simpan
     localStorage.setItem('username', name);
     closeLogin();
     renderUserPanel();
 }
 
-// Efek visual sikit kalau salah input
 function shakeElement(el) {
     el.style.borderColor = "#ff5252";
     el.animate([
@@ -93,7 +87,6 @@ function logout() {
     renderUserPanel();
 }
 
-// --- FUNGSI BARU: NOTIFIKASI CUSTOM (Ganti Alert) ---
 function showWarning(mesej) {
     login();
     const warning = document.getElementById('login-warning');
@@ -103,12 +96,23 @@ function showWarning(mesej) {
     }
 }
 
-// --- LOGIK PEMILIHAN KATEGORI ---
+// --- FUNGSI BARU: AMBIL LEVEL YANG DIPILIH ---
+function getSelectedLevel() {
+    const levels = document.getElementsByName('level');
+    for (let l of levels) {
+        if (l.checked) return l.value;
+    }
+    return 'MEDIUM'; // Default jika apa-apa berlaku
+}
+
+// --- LOGIK PEMILIHAN KATEGORI (DENGAN LEVEL) ---
 function pickCategoryCross(kategori) {
     if (!localStorage.getItem('username')) {
         showWarning("Sila set nama dulu sebelum main!");
         return;
     }
+    // Simpan Level & Kategori
+    localStorage.setItem('selectedLevel', getSelectedLevel());
     localStorage.setItem('selectedCategory', kategori.toUpperCase());
     window.location.href = 'game.html';
 }
@@ -118,6 +122,7 @@ function pickRandomCross() {
         showWarning("Sila set nama dulu sebelum main!");
         return;
     }
+    localStorage.setItem('selectedLevel', getSelectedLevel());
     localStorage.setItem('selectedCategory', 'RAWAK');
     window.location.href = 'game.html';
 }
@@ -144,6 +149,7 @@ function startCustomGameCross() {
         return;
     }
 
+    localStorage.setItem('selectedLevel', getSelectedLevel());
     localStorage.setItem('selectedCategory', 'CUSTOM');
     localStorage.setItem('customWords', JSON.stringify(words));
     window.location.href = 'game.html';

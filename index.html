@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cari Perkataan</title>
+    <title>Cari Perkataan v4.2.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -14,6 +14,20 @@
         <div id="user-panel"></div>
 
         <h1 class="game-title">CARI<br>PERKATAAN</h1>
+
+        <div class="level-section">
+            <p class="label">TAHAP KESUKARAN</p>
+            <div class="level-selector">
+                <input type="radio" name="level" id="lvl-easy" value="EASY">
+                <label for="lvl-easy" class="lvl-btn l-easy">SANTAl</label>
+
+                <input type="radio" name="level" id="lvl-med" value="MEDIUM" checked>
+                <label for="lvl-med" class="lvl-btn l-med">BIASA</label>
+
+                <input type="radio" name="level" id="lvl-hard" value="HARD">
+                <label for="lvl-hard" class="lvl-btn l-hard">GILA</label>
+            </div>
+        </div>
         
         <div class="grid-kategori">
             <button onclick="pickCategoryCross('negara')" class="btn-menu b-negara">
@@ -52,9 +66,9 @@
             <i class="fas fa-trophy"></i> LEADERBOARD
         </button>
 
-        <footer style="margin-top: 30px; padding-bottom: 10px; text-align: center;">
+        <footer>
             <p style="font-family: 'Fredoka One', cursive; font-size: 0.7rem; color: #00acc1; opacity: 0.8; letter-spacing: 1px;">
-                AKULAS <span style="background: #00acc1; color: white; padding: 2px 8px; border-radius: 10px; margin-left: 5px;">v4.1.0</span>
+                AKULAS <span style="background: #00acc1; color: white; padding: 2px 8px; border-radius: 10px; margin-left: 5px;">v4.2.0</span>
             </p>
         </footer>
     </div>
@@ -62,31 +76,13 @@
     <div id="login-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center; font-family: 'Fredoka One', cursive;">
         <div class="menu-container" style="max-width:320px; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 4px solid #fff;">
             <h2 style="color:#00acc1; margin-top:0;">PROFIL PEMAIN</h2>
-            
-            <div id="login-warning" style="display:none; background:#ffebee; color:#d32f2f; padding:10px; border-radius:15px; font-size:0.75rem; margin-bottom:15px; border: 2px solid #ffcdd2;">
-            </div>
-
+            <div id="login-warning" style="display:none; background:#ffebee; color:#d32f2f; padding:10px; border-radius:15px; font-size:0.75rem; margin-bottom:15px; border: 2px solid #ffcdd2;"></div>
             <p style="color:#888; font-size:0.8rem; margin-bottom:20px;">Masukkan nama untuk simpan skor & masuk Leaderboard.</p>
-            
-            <input type="text" id="loginInput" placeholder="NAMA KAMU..." 
-                style="width:100%; padding:15px; border-radius:20px; border:2px solid #b2ebf2; margin-bottom:20px; text-align:center; font-family:'Fredoka One'; outline:none;">
-            
-            <button onclick="saveLogin()" class="btn-play-custom" style="background:#4caf50; box-shadow:0 5px 0 #2e7d32; color:white; border:none; width:100%; cursor:pointer;">
-                SIMPAN & MULA
-            </button>
-            
-            <button onclick="closeLogin()" style="background:none; border:none; color:#ff5252; margin-top:15px; cursor:pointer; font-family:'Fredoka One'; font-size:0.8rem; text-decoration: underline;">
-                BATAL
-            </button>
+            <input type="text" id="loginInput" placeholder="NAMA KAMU..." style="width:100%; padding:15px; border-radius:20px; border:2px solid #b2ebf2; margin-bottom:20px; text-align:center; font-family:'Fredoka One'; outline:none;">
+            <button onclick="saveLogin()" class="btn-play-custom" style="background:#4caf50; box-shadow:0 5px 0 #2e7d32; color:white; border:none; width:100%; cursor:pointer;">SIMPAN & MULA</button>
+            <button onclick="closeLogin()" style="background:none; border:none; color:#ff5252; margin-top:15px; cursor:pointer; font-family:'Fredoka One'; font-size:0.8rem; text-decoration: underline;">BATAL</button>
         </div>
     </div>
-
-    <style>
-    @keyframes popIn {
-        from { transform: scale(0.8); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
-    }
-    </style>
 
     <script src="script.js"></script>
 </body>

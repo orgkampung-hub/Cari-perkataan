@@ -1,25 +1,19 @@
-/* c_modal.css - Sistem Paparan Modal Syabas */
+/* c_modal.css - Sistem Paparan Modal Syabas (v4.3.0) */
 
-/* Container utama modal */
 #game-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Latar belakang hitam pudar */
-    display: none; /* Disorokkan secara default */
+    background-color: rgba(0, 48, 52, 0.85); /* Latar belakang tema gelap telus */
+    display: none; /* Dikawal oleh ModalSystem.show() */
     justify-content: center;
     align-items: center;
-    z-index: 99999; /* Pastikan duduk paling atas sekali */
-    backdrop-filter: blur(8px); /* Efek kabur di belakang modal */
+    z-index: 99999;
+    backdrop-filter: blur(8px);
     padding: 20px;
     box-sizing: border-box;
-}
-
-/* Class untuk panggil modal muncul */
-#game-modal.modal-show {
-    display: flex !important;
 }
 
 /* Kotak kandungan modal */
@@ -28,47 +22,84 @@
     width: 100%;
     max-width: 340px;
     padding: 30px 20px;
-    border-radius: 30px;
+    border-radius: 35px; /* Lebih bulat, lebih mesra */
     text-align: center;
     position: relative;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 0 rgba(0,0,0,0.2); /* Efek shadow tebal di bawah */
+    border: 6px solid #00acc1; /* Border tema arkitek */
+    box-sizing: border-box;
     
-    /* Animasi muncul dari bawah ke tengah */
-    animation: modalBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    /* Animasi mula-mula diset pada keadaan asal untuk ditrigger oleh class modal-show */
+    opacity: 0;
+    transform: scale(0.7) translateY(50px);
+}
+
+/* Trigger Animasi apabila class modal-show ditambah */
+.modal-show .modal-content {
+    animation: modalBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 @keyframes modalBounce {
-    0% { transform: scale(0.7) translateY(100px); opacity: 0; }
-    100% { transform: scale(1) translateY(0); opacity: 1; }
+    0% { 
+        transform: scale(0.7) translateY(50px); 
+        opacity: 0; 
+    }
+    70% {
+        transform: scale(1.05) translateY(-5px);
+    }
+    100% { 
+        transform: scale(1) translateY(0); 
+        opacity: 1; 
+    }
 }
 
 /* Gaya Butang dalam Modal */
 .btn-modal-action {
     transition: all 0.2s ease;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     font-size: 0.9rem;
     outline: none;
+    border-radius: 15px;
+    font-family: 'Fredoka One', cursive;
+    cursor: pointer;
+}
+
+.btn-modal-action:hover {
+    filter: brightness(1.1);
 }
 
 .btn-modal-action:active {
-    transform: translateY(2px);
-    box-shadow: 0 1px #222 !important;
+    transform: translateY(3px);
+    filter: brightness(0.9);
 }
 
-/* Gaya tambahan untuk teks dalam modal (jika tak set inline) */
-.modal-content h2 {
-    font-family: 'Fredoka One', cursive;
-    margin-bottom: 10px;
+/* Status Hantar Skor (Spinner Animation) */
+#status-hantar {
+    margin: 15px 0;
+    padding: 8px;
+    background: #f0fdf4;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: #4caf50;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-.modal-content p {
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.9rem;
-    margin: 5px 0;
-}
-
-/* Sembunyikan modal jika ada class modal-hidden */
+/* Sembunyikan modal */
 .modal-hidden {
     display: none !important;
+}
+
+/* Responsif untuk Phone Kecil (Contoh: iPhone SE) */
+@media (max-width: 340px) {
+    .modal-content {
+        padding: 20px 15px;
+    }
+    .modal-content h2 {
+        font-size: 1.4rem;
+    }
 }

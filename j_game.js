@@ -99,7 +99,8 @@ const GameController = {
             this.updateScoreUI();
 
             if (this.foundCount === this.totalToFind && this.totalToFind > 0) {
-                setTimeout(() => this.victory(), 500);
+                // Tambah delay sikit kat sini (dari 500 ke 1200) supaya animasi grid settle
+                setTimeout(() => this.victory(), 1200);
             }
         }
     },
@@ -112,32 +113,35 @@ const GameController = {
     victory() {
         console.log("Kemenangan dikesan!");
         
-        if (typeof SoundEngine !== 'undefined') {
-            SoundEngine.playVictory();
-        }
-        
-        let timeString = "00:00";
-        let totalSeconds = 0;
-        if (typeof Timer !== 'undefined') {
-            Timer.stop();
-            timeString = Timer.getTimeFormatted();
-            totalSeconds = Timer.getTotalSeconds();
-        }
+        // Bungkus semua logik victory dlm timeout supaya bertenang sikit
+        setTimeout(() => {
+            if (typeof SoundEngine !== 'undefined') {
+                SoundEngine.playVictory();
+            }
+            
+            let timeString = "00:00";
+            let totalSeconds = 0;
+            if (typeof Timer !== 'undefined') {
+                Timer.stop();
+                timeString = Timer.getTimeFormatted();
+                totalSeconds = Timer.getTotalSeconds();
+            }
 
-        if (typeof ScoreSystem !== 'undefined') {
-            const finalBonus = ScoreSystem.calculateFinalBonus(totalSeconds);
-            this.score += finalBonus;
-            this.updateScoreUI();
-        }
+            if (typeof ScoreSystem !== 'undefined') {
+                const finalBonus = ScoreSystem.calculateFinalBonus(totalSeconds);
+                this.score += finalBonus;
+                this.updateScoreUI();
+            }
 
-        if (typeof ModalSystem !== 'undefined') {
-            ModalSystem.show({
-                title: "TAHNIAH!",
-                message: `Anda menjumpai semua ${this.totalToFind} perkataan!`,
-                time: timeString,
-                score: this.score
-            });
-        }
+            if (typeof ModalSystem !== 'undefined') {
+                ModalSystem.show({
+                    title: "TAHNIAH!",
+                    message: `Anda menjumpai semua ${this.totalToFind} perkataan!`,
+                    time: timeString,
+                    score: this.score
+                });
+            }
+        }, 300); // Extra safety delay
     }
 };
 

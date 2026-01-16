@@ -1,0 +1,54 @@
+/* c_bonus.css - Animasi Meletup Tengah Skrin */
+
+.combo-bar-container {
+    width: 140px; height: 8px; background: rgba(0,0,0,0.2);
+    border-radius: 10px; margin: 8px auto 0; overflow: hidden;
+    display: none; border: 2px solid rgba(255,255,255,0.3);
+}
+.combo-bar-fill {
+    width: 100%; height: 100%; background: linear-gradient(90deg, #ffeb3b, #f57f17);
+    box-shadow: 0 0 10px #ffeb3b; transition: width 0.1s linear;
+}
+
+#combo-popup {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    z-index: 999999; /* Pastikan paling depan */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+    opacity: 0;
+}
+
+.combo-text-top {
+    font-size: 3.5rem; /* Saiz besar */
+    color: #ffffff;
+    -webkit-text-stroke: 2px #e65100;
+    text-shadow: 5px 5px 0px #e65100;
+    line-height: 1;
+}
+
+.combo-text-bottom {
+    font-size: 6rem; /* Saiz gergasi */
+    color: #ffeb3b;
+    -webkit-text-stroke: 3px #e65100;
+    text-shadow: 8px 8px 0px #e65100, 0 0 30px rgba(255,235,59,0.5);
+    line-height: 0.8;
+}
+
+/* Animasi Zoom Gempak */
+.animate-zoom-pop {
+    animation: zoomPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes zoomPop {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    40% { transform: translate(-50%, -50%) scale(1.4); opacity: 1; }
+    60% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    100% { transform: translate(-50%, -55%) scale(1.5); opacity: 0; }
+}

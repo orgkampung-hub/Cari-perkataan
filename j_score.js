@@ -1,52 +1,71 @@
 /**
- * j_score.js - Pusat Kawalan Skor
- * Senang nak tukar-tukar kalau rasa tak ngam.
+ * j_score.js - Versi 1 Mata (Synced & Fixed)
  */
-
 const ScoreSystem = {
-    // --- KONFIGURASI (Ubah kat sini je esok-esok) ---
+    currentCombo: 1,
+    comboWindow: 20, 
+    isFirstWord: true, 
+    
     settings: {
-        pointsPerLetter: 10,     // Satu huruf dapat berapa mata
-        speedBonusLimit: 15,    // Bawah berapa saat dikira "laju"
-        speedBonusPoints: 50,   // Berapa mata bonus laju
-        hintPenalty: 0.5,       // Potong berapa? (0.5 = 50%, 0.2 = 20%)
-        diagonalBonus: 1.5      // Bonus kalau perkataan menyerong
+        pointsPerWord: 1 // Dah tukar balik ke 1 mata
     },
 
     /**
-     * Fungsi utama kira markah setiap kali jumpa perkataan
+     * Dikira setiap kali perkataan dijumpai
      */
-    calculateWordScore(word, secondsTaken, isHintUsed, isDiagonal = false) {
-        // 1. Mata asas ikut panjang huruf
-        let total = word.length * this.settings.pointsPerLetter;
+    calculateWordScore(word, secondsTaken, isHintUsed, isDiagonal) {
+        try {
+            // 1. LOGIK COMBO
+            if (!this.isFirstWord && secondsTaken > 0 && secondsTaken <= this.comboWindow) {
+                this.currentCombo++;
+            } else {
+                this.currentCombo = 1;
+                this.isFirstWord = false; 
+            }
 
-        // 2. Bonus kalau jumpa cepat (Cun-cun cina punya timing)
-        if (secondsTaken <= this.settings.speedBonusLimit) {
-            total += this.settings.speedBonusPoints;
-            console.log("🚀 Bonus Laju!");
+            // 2. TRIGGER VISUAL & SOUND
+            if (this.currentCombo > 1) {
+                if (typeof BonusUI !== 'undefined' && BonusUI.showCombo) {
+                    BonusUI.showCombo(this.currentCombo);
+                }
+                if (typeof SoundEngine !== 'undefined' && SoundEngine.playCombo) {
+                    SoundEngine.playCombo();
+                }
+            }
+
+            // 3. KIRA SKOR (pointsPerWord * multiplier)
+            let total = this.settings.pointsPerWord * this.currentCombo;
+            
+            // Jika kau taknak bonus diagonal, biarkan 0 atau buang baris ni
+            // if (isDiagonal) total += 0; 
+
+            // Jika guna hint, tiada mata diberikan
+            if (isHintUsed) {
+                total = 0;
+                this.currentCombo = 1;
+            }
+
+            console.log(`Score: +${total} (Multiplier: x${this.currentCombo})`);
+            return total;
+
+        } catch (e) {
+            console.error("Score Error:", e);
+            return 1; 
         }
-
-        // 3. Bonus kalau perkataan tu menyerong (Diagonal)
-        if (isDiagonal) {
-            total = Math.floor(total * this.settings.diagonalBonus);
-        }
-
-        // 4. Potongan kalau guna hint (Kesian tapi kena adil)
-        if (isHintUsed) {
-            total = Math.floor(total * (1 - this.settings.hintPenalty));
-            console.log("💡 Penalti Hint dikenakan.");
-        }
-
-        return total;
     },
 
     /**
-     * Bonus akhir selepas habis semua perkataan
+     * Fungsi Bonus Akhir (Wajib ada untuk j_game.js)
      */
-    calculateFinalBonus(remainingTimeInSeconds) {
-        // Contoh: Baki 1 saat = 5 mata bonus
-        return remainingTimeInSeconds * 5;
+    calculateFinalBonus(totalSeconds) {
+        return 0; // Kekalkan 0 supaya tak tambah skor pelik-pelik masa menang
+    },
+
+    resetScore() {
+        this.currentCombo = 1;
+        this.isFirstWord = true;
+        if (typeof BonusUI !== 'undefined' && BonusUI.hideBar) {
+            BonusUI.hideBar();
+        }
     }
 };
-
-console.log("Score System: Sedia untuk 'tuning'.");
